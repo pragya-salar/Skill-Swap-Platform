@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile Setup | Skill Swap</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container">
+      <a class="navbar-brand" href="#">SkillSwap</a>
+      <div class="navbar-nav ms-auto">
+        <span class="navbar-text">Welcome, New User!</span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="text-center mb-5">
+          <h1 class="fw-bold text-dark mb-3">Complete Your Profile</h1>
+          <p class="text-muted">Tell us about your skills and what you'd like to learn</p>
+        </div>
+
+        <div class="card fade-in">
+          <div class="card-body p-4">
+            <form id="profileSetupForm">
+              <!-- Step 1: Basic Info -->
+              <div class="step" id="step1">
+                <h4 class="mb-4">Basic Information</h4>
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label for="displayName" class="form-label">Display Name</label>
+                    <input type="text" class="form-control" id="displayName" placeholder="How should we call you?" required>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label for="location" class="form-label">Location</label>
+                    <input type="text" class="form-control" id="location" placeholder="City, Country">
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="bio" class="form-label">Bio</label>
+                  <textarea class="form-control" id="bio" rows="3" placeholder="Tell us a bit about yourself..."></textarea>
+                </div>
+                <div class="mb-3">
+                  <label for="profilePhoto" class="form-label">Profile Photo</label>
+                  <input type="file" class="form-control" id="profilePhoto" accept="image/*">
+                </div>
+              </div>
+
+              <!-- Step 2: Skills Offered -->
+              <div class="step" id="step2" style="display: none;">
+                <h4 class="mb-4">Skills You Can Offer</h4>
+                <p class="text-muted mb-4">What skills can you teach or help others with?</p>
+                
+                <div class="mb-3">
+                  <label for="skillInput" class="form-label">Add a Skill</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" id="skillInput" placeholder="e.g., Photoshop, Spanish, Excel">
+                    <button type="button" class="btn btn-secondary" onclick="addSkill('offered')">Add</button>
+                  </div>
+                </div>
+                
+                <div id="offeredSkills" class="mb-4">
+                  <!-- Skills will be added here -->
+                </div>
+                
+                <div class="mb-3">
+                  <label class="form-label">Popular Skills</label>
+                  <div class="d-flex flex-wrap gap-2">
+                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addPopularSkill('Photoshop', 'offered')">Photoshop</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addPopularSkill('Excel', 'offered')">Excel</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addPopularSkill('Spanish', 'offered')">Spanish</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addPopularSkill('Cooking', 'offered')">Cooking</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addPopularSkill('Guitar', 'offered')">Guitar</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addPopularSkill('Web Design', 'offered')">Web Design</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Step 3: Skills Wanted -->
+              <div class="step" id="step3" style="display: none;">
+                <h4 class="mb-4">Skills You Want to Learn</h4>
+                <p class="text-muted mb-4">What skills would you like to learn from others?</p>
+                
+                <div class="mb-3">
+                  <label for="wantedSkillInput" class="form-label">Add a Skill</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" id="wantedSkillInput" placeholder="e.g., Video Editing, French, Data Analysis">
+                    <button type="button" class="btn btn-secondary" onclick="addSkill('wanted')">Add</button>
+                  </div>
+                </div>
+                
+                <div id="wantedSkills" class="mb-4">
+                  <!-- Skills will be added here -->
+                </div>
+                
+                <div class="mb-3">
+                  <label class="form-label">Popular Skills</label>
+                  <div class="d-flex flex-wrap gap-2">
+                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addPopularSkill('Video Editing', 'wanted')">Video Editing</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addPopularSkill('French', 'wanted')">French</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addPopularSkill('Data Analysis', 'wanted')">Data Analysis</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addPopularSkill('Photography', 'wanted')">Photography</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addPopularSkill('Piano', 'wanted')">Piano</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addPopularSkill('Digital Marketing', 'wanted')">Digital Marketing</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Step 4: Availability -->
+              <div class="step" id="step4" style="display: none;">
+                <h4 class="mb-4">Your Availability</h4>
+                <p class="text-muted mb-4">When are you typically available for skill exchanges?</p>
+                
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label">Days of the Week</label>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="monday">
+                      <label class="form-check-label" for="monday">Monday</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="tuesday">
+                      <label class="form-check-label" for="tuesday">Tuesday</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="wednesday">
+                      <label class="form-check-label" for="wednesday">Wednesday</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="thursday">
+                      <label class="form-check-label" for="thursday">Thursday</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="friday">
+                      <label class="form-check-label" for="friday">Friday</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="saturday">
+                      <label class="form-check-label" for="saturday">Saturday</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="sunday">
+                      <label class="form-check-label" for="sunday">Sunday</label>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label">Time of Day</label>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="morning">
+                      <label class="form-check-label" for="morning">Morning (6 AM - 12 PM)</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="afternoon">
+                      <label class="form-check-label" for="afternoon">Afternoon (12 PM - 6 PM)</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="evening">
+                      <label class="form-check-label" for="evening">Evening (6 PM - 12 AM)</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="night">
+                      <label class="form-check-label" for="night">Night (12 AM - 6 AM)</label>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="mb-3">
+                  <label for="timezone" class="form-label">Timezone</label>
+                  <select class="form-control" id="timezone">
+                    <option value="">Select your timezone</option>
+                    <option value="UTC-8">Pacific Time (UTC-8)</option>
+                    <option value="UTC-7">Mountain Time (UTC-7)</option>
+                    <option value="UTC-6">Central Time (UTC-6)</option>
+                    <option value="UTC-5">Eastern Time (UTC-5)</option>
+                    <option value="UTC+0">UTC</option>
+                    <option value="UTC+1">Central European Time (UTC+1)</option>
+                    <option value="UTC+5:30">Indian Standard Time (UTC+5:30)</option>
+                    <option value="UTC+8">China Standard Time (UTC+8)</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Step 5: Privacy Settings -->
+              <div class="step" id="step5" style="display: none;">
+                <h4 class="mb-4">Privacy Settings</h4>
+                <p class="text-muted mb-4">Control who can see your profile and contact you</p>
+                
+                <div class="mb-3">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="profileVisibility" id="public" value="public" checked>
+                    <label class="form-check-label" for="public">
+                      <strong>Public Profile</strong><br>
+                      <small class="text-muted">Anyone can see your profile and skills</small>
+                    </label>
+                  </div>
+                </div>
+                
+                <div class="mb-3">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="profileVisibility" id="private" value="private">
+                    <label class="form-check-label" for="private">
+                      <strong>Private Profile</strong><br>
+                      <small class="text-muted">Only people you approve can see your profile</small>
+                    </label>
+                  </div>
+                </div>
+                
+                <div class="mb-3">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="emailNotifications" checked>
+                    <label class="form-check-label" for="emailNotifications">
+                      Receive email notifications for new swap requests
+                    </label>
+                  </div>
+                </div>
+                
+                <div class="mb-3">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="marketingEmails">
+                    <label class="form-check-label" for="marketingEmails">
+                      Receive updates about new features and community events
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Navigation Buttons -->
+              <div class="d-flex justify-content-between mt-4">
+                <button type="button" class="btn btn-secondary" id="prevBtn" onclick="previousStep()" style="display: none;">Previous</button>
+                <button type="button" class="btn btn-primary" id="nextBtn" onclick="nextStep()">Next</button>
+                <button type="submit" class="btn btn-success" id="submitBtn" style="display: none;">Complete Setup</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    let currentStep = 1;
+    const totalSteps = 5;
+    let offeredSkillsList = [];
+    let wantedSkillsList = [];
+
+    function showStep(step) {
+      // Hide all steps
+      for (let i = 1; i <= totalSteps; i++) {
+        document.getElementById(`step${i}`).style.display = 'none';
+      }
+      
+      // Show current step
+      document.getElementById(`step${step}`).style.display = 'block';
+      
+      // Update navigation buttons
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const submitBtn = document.getElementById('submitBtn');
+      
+      if (step === 1) {
+        prevBtn.style.display = 'none';
+        nextBtn.style.display = 'inline-block';
+        submitBtn.style.display = 'none';
+      } else if (step === totalSteps) {
+        prevBtn.style.display = 'inline-block';
+        nextBtn.style.display = 'none';
+        submitBtn.style.display = 'inline-block';
+      } else {
+        prevBtn.style.display = 'inline-block';
+        nextBtn.style.display = 'inline-block';
+        submitBtn.style.display = 'none';
+      }
+    }
+
+    function nextStep() {
+      if (currentStep < totalSteps) {
+        currentStep++;
+        showStep(currentStep);
+      }
+    }
+
+    function previousStep() {
+      if (currentStep > 1) {
+        currentStep--;
+        showStep(currentStep);
+      }
+    }
+
+    function addSkill(type) {
+      const input = document.getElementById(type === 'offered' ? 'skillInput' : 'wantedSkillInput');
+      const skill = input.value.trim();
+      
+      if (skill) {
+        if (type === 'offered') {
+          if (!offeredSkillsList.includes(skill)) {
+            offeredSkillsList.push(skill);
+            renderSkills('offeredSkills', offeredSkillsList, 'offered');
+          }
+        } else {
+          if (!wantedSkillsList.includes(skill)) {
+            wantedSkillsList.push(skill);
+            renderSkills('wantedSkills', wantedSkillsList, 'wanted');
+          }
+        }
+        input.value = '';
+      }
+    }
+
+    function addPopularSkill(skill, type) {
+      if (type === 'offered') {
+        if (!offeredSkillsList.includes(skill)) {
+          offeredSkillsList.push(skill);
+          renderSkills('offeredSkills', offeredSkillsList, 'offered');
+        }
+      } else {
+        if (!wantedSkillsList.includes(skill)) {
+          wantedSkillsList.push(skill);
+          renderSkills('wantedSkills', wantedSkillsList, 'wanted');
+        }
+      }
+    }
+
+    function removeSkill(skill, type) {
+      if (type === 'offered') {
+        offeredSkillsList = offeredSkillsList.filter(s => s !== skill);
+        renderSkills('offeredSkills', offeredSkillsList, 'offered');
+      } else {
+        wantedSkillsList = wantedSkillsList.filter(s => s !== skill);
+        renderSkills('wantedSkills', wantedSkillsList, 'wanted');
+      }
+    }
+
+    function renderSkills(containerId, skillsList, type) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+      
+      skillsList.forEach(skill => {
+        const skillTag = document.createElement('span');
+        skillTag.className = `skill-tag ${type === 'wanted' ? 'wanted' : ''}`;
+        skillTag.innerHTML = `
+          ${skill}
+          <button type="button" class="btn-close btn-close-white ms-2" onclick="removeSkill('${skill}', '${type}')"></button>
+        `;
+        container.appendChild(skillTag);
+      });
+    }
+
+    // Handle form submission
+    document.getElementById('profileSetupForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Validate required fields
+      const displayName = document.getElementById('displayName').value;
+      if (!displayName) {
+        showToast('Please enter your display name', 'error');
+        return;
+      }
+      
+      if (offeredSkillsList.length === 0) {
+        showToast('Please add at least one skill you can offer', 'error');
+        return;
+      }
+      
+      if (wantedSkillsList.length === 0) {
+        showToast('Please add at least one skill you want to learn', 'error');
+        return;
+      }
+      
+      // Simulate profile creation
+      showToast('Creating your profile...', 'info');
+      
+      setTimeout(() => {
+        showToast('Profile created successfully! Welcome to Skill Swap!', 'success');
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 2000);
+      }, 1500);
+    });
+
+    function showToast(message, type = 'info') {
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.innerHTML = `
+        <div class="d-flex align-items-center">
+          <div class="me-3">
+            <i class="fas fa-${type === 'error' ? 'exclamation-circle text-danger' : type === 'success' ? 'check-circle text-success' : 'info-circle text-primary'}"></i>
+          </div>
+          <div>${message}</div>
+        </div>
+      `;
+      
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.remove();
+      }, 4000);
+    }
+
+    // Initialize first step
+    showStep(1);
+  </script>
+</body>
+</html> 

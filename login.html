@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Skill Swap</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row min-vh-100">
+      <!-- Left Side - Branding -->
+      <div class="col-lg-6 d-none d-lg-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, var(--primary-color), #8b6b7a);">
+        <div class="text-center text-white">
+          <h1 class="display-4 fw-bold mb-4">Skill Swap</h1>
+          <p class="lead mb-4">Connect, Learn, and Grow Together</p>
+          <div class="row text-center">
+            <div class="col-4">
+              <div class="mb-3">
+                <i class="fas fa-users fa-2x mb-2"></i>
+                <h5>Connect</h5>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="mb-3">
+                <i class="fas fa-graduation-cap fa-2x mb-2"></i>
+                <h5>Learn</h5>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="mb-3">
+                <i class="fas fa-chart-line fa-2x mb-2"></i>
+                <h5>Grow</h5>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Right Side - Login Form -->
+      <div class="col-lg-6 d-flex align-items-center justify-content-center">
+        <div class="w-100" style="max-width: 400px;">
+          <div class="text-center mb-4">
+            <h2 class="fw-bold text-dark">Welcome Back</h2>
+            <p class="text-muted">Sign in to your Skill Swap account</p>
+          </div>
+          
+          <div class="card fade-in">
+            <div class="card-body p-4">
+              <form id="loginForm">
+                <div class="mb-3">
+                  <label for="email" class="form-label">Email Address</label>
+                  <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+                </div>
+                
+                <div class="mb-3">
+                  <label for="password" class="form-label">Password</label>
+                  <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                </div>
+                
+                <div class="mb-3 form-check">
+                  <input type="checkbox" class="form-check-input" id="rememberMe">
+                  <label class="form-check-label" for="rememberMe">
+                    Remember me
+                  </label>
+                </div>
+                
+                <button type="submit" class="btn btn-primary w-100 mb-3">
+                  Sign In
+                </button>
+                
+                <div class="text-center">
+                  <a href="#" class="text-decoration-none">Forgot your password?</a>
+                </div>
+              </form>
+            </div>
+          </div>
+          
+          <div class="text-center mt-4">
+            <p class="text-muted">Don't have an account? 
+              <a href="register.html" class="text-decoration-none fw-bold" style="color: var(--primary-color);">Sign up</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://kit.fontawesome.com/your-fontawesome-kit.js"></script>
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      
+      // Simple validation
+      if (!email || !password) {
+        showToast('Please fill in all fields', 'error');
+        return;
+      }
+      
+      // Simulate login process
+      showToast('Signing in...', 'info');
+      
+      setTimeout(() => {
+        window.location.href = 'dashboard.html';
+      }, 1500);
+    });
+    
+    function showToast(message, type = 'info') {
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.innerHTML = `
+        <div class="d-flex align-items-center">
+          <div class="me-3">
+            <i class="fas fa-${type === 'error' ? 'exclamation-circle text-danger' : 'info-circle text-primary'}"></i>
+          </div>
+          <div>${message}</div>
+        </div>
+      `;
+      
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.remove();
+      }, 3000);
+    }
+  </script>
+</body>
+</html> 

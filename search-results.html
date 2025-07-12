@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Results | Skill Swap</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container">
+      <a class="navbar-brand" href="dashboard.html">SkillSwap</a>
+      <div class="navbar-nav ms-auto">
+        <a class="nav-link" href="dashboard.html">Dashboard</a>
+        <a class="nav-link" href="login.html">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container py-5">
+    <!-- Search Header -->
+    <div class="row mb-4">
+      <div class="col-lg-8">
+        <h1 class="fw-bold text-dark mb-2">Search Results</h1>
+        <p class="text-muted">Showing results for "<span id="searchTerm">Photoshop</span>"</p>
+      </div>
+      <div class="col-lg-4">
+        <a href="dashboard.html" class="btn btn-outline-primary">
+          <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+        </a>
+      </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-container mb-4">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <input type="text" class="search-input" placeholder="Search for skills or users..." value="Photoshop">
+        </div>
+        <div class="col-md-4">
+          <div class="d-flex gap-2">
+            <select class="form-control">
+              <option>All Categories</option>
+              <option>Technology</option>
+              <option>Languages</option>
+            </select>
+            <button class="btn btn-primary">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="row">
+      <!-- User Card 1 -->
+      <div class="col-lg-6 col-xl-4 mb-4">
+        <div class="card h-100 fade-in">
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-3">
+              <img src="https://via.placeholder.com/60x60/714b67/ffffff?text=SJ" class="rounded-circle me-3" width="60" height="60">
+              <div>
+                <h5 class="fw-bold mb-1">Sarah Johnson</h5>
+                <p class="text-muted mb-1">Mumbai, India</p>
+                <div class="d-flex align-items-center">
+                  <div class="text-warning me-2">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                  </div>
+                  <small class="text-muted">4.9 (24 reviews)</small>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <h6 class="fw-bold mb-2">Can Teach:</h6>
+              <div class="d-flex flex-wrap gap-1 mb-2">
+                <span class="skill-tag">Video Editing</span>
+                <span class="skill-tag">Photography</span>
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <h6 class="fw-bold mb-2">Wants to Learn:</h6>
+              <div class="d-flex flex-wrap gap-1">
+                <span class="skill-tag wanted">Photoshop</span>
+                <span class="skill-tag wanted">Spanish</span>
+              </div>
+            </div>
+            
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="badge bg-success">Available</span>
+              <button class="btn btn-primary btn-sm" onclick="requestSwap()">Request Swap</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- User Card 2 -->
+      <div class="col-lg-6 col-xl-4 mb-4">
+        <div class="card h-100 fade-in">
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-3">
+              <img src="https://via.placeholder.com/60x60/714b67/ffffff?text=MC" class="rounded-circle me-3" width="60" height="60">
+              <div>
+                <h5 class="fw-bold mb-1">Mike Chen</h5>
+                <p class="text-muted mb-1">Delhi, India</p>
+                <div class="d-flex align-items-center">
+                  <div class="text-warning me-2">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                  </div>
+                  <small class="text-muted">4.2 (18 reviews)</small>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <h6 class="fw-bold mb-2">Can Teach:</h6>
+              <div class="d-flex flex-wrap gap-1 mb-2">
+                <span class="skill-tag">Data Analysis</span>
+                <span class="skill-tag">Python</span>
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <h6 class="fw-bold mb-2">Wants to Learn:</h6>
+              <div class="d-flex flex-wrap gap-1">
+                <span class="skill-tag wanted">Excel</span>
+                <span class="skill-tag wanted">Web Design</span>
+              </div>
+            </div>
+            
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="badge bg-success">Available</span>
+              <button class="btn btn-primary btn-sm" onclick="requestSwap()">Request Swap</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- User Card 3 -->
+      <div class="col-lg-6 col-xl-4 mb-4">
+        <div class="card h-100 fade-in">
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-3">
+              <img src="https://via.placeholder.com/60x60/714b67/ffffff?text=EW" class="rounded-circle me-3" width="60" height="60">
+              <div>
+                <h5 class="fw-bold mb-1">Emma Wilson</h5>
+                <p class="text-muted mb-1">Bangalore, India</p>
+                <div class="d-flex align-items-center">
+                  <div class="text-warning me-2">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                  </div>
+                  <small class="text-muted">4.7 (31 reviews)</small>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <h6 class="fw-bold mb-2">Can Teach:</h6>
+              <div class="d-flex flex-wrap gap-1 mb-2">
+                <span class="skill-tag">French</span>
+                <span class="skill-tag">Cooking</span>
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <h6 class="fw-bold mb-2">Wants to Learn:</h6>
+              <div class="d-flex flex-wrap gap-1">
+                <span class="skill-tag wanted">Spanish</span>
+                <span class="skill-tag wanted">Guitar</span>
+              </div>
+            </div>
+            
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="badge bg-secondary">Busy</span>
+              <button class="btn btn-outline-primary btn-sm">View Profile</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Load More -->
+    <div class="text-center mt-5">
+      <button class="btn btn-outline-primary">
+        <i class="fas fa-plus me-2"></i>Load More Results
+      </button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function requestSwap() {
+      alert('Swap request sent!');
+    }
+  </script>
+</body>
+</html> 

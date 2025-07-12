@@ -306,48 +306,546 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    function approveSkill(skillId) {
+    // Global admin data - will be loaded from backend
+    let adminStats = null;
+    let pendingApprovals = [];
+    let userReports = [];
+    let recentActivity = [];
+    let systemStatus = {};
+
+    // Check if user is admin
+    function checkAdminAccess() {
+      const token = localStorage.getItem('token');
+      const userRole = localStorage.getItem('userRole');
+      
+      if (!token || userRole !== 'admin') {
+        showToast('Access denied. Admin privileges required.', 'error');
+        setTimeout(() => {
+          window.location.href = 'login.html';
+        }, 2000);
+        return false;
+      }
+      return true;
+    }
+
+    // Load admin data when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      if (!checkAdminAccess()) return;
+      
+      loadAdminStats();
+      loadPendingApprovals();
+      loadUserReports();
+      loadRecentActivity();
+      loadSystemStatus();
+    });
+
+    // Load platform statistics
+    async function loadAdminStats() {
+      try {
+        const response = await fetch('/api/admin/stats', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        
+        if (response.ok) {
+          adminStats = await response.json();
+          updateStatsDisplay();
+        } else {
+          showToast('Failed to load platform stats', 'error');
+          loadDemoStats();
+        }
+      } catch (error) {
+        console.error('Error loading admin stats:', error);
+        loadDemoStats();
+      }
+    }
+
+    // Update stats display
+    function updateStatsDisplay() {
+      if (!adminStats) return;
+
+      const statsElements = document.querySelectorAll('.stats-number');
+      if (statsElements.length >= 4) {
+        statsElements[0].textContent = adminStats.totalUsers?.toLocaleString() || '0';
+        statsElements[1].textContent = adminStats.pendingSwaps || '0';
+        statsElements[2].textContent = adminStats.completedSwaps || '0';
+        statsElements[3].textContent = adminStats.reportedIssues || '0';
+      }
+
+      // Update progress bars
+      const activeUsersProgress = document.querySelector('.progress-bar');
+      const successRateProgress = document.querySelector('.progress-bar.bg-success');
+      const satisfactionProgress = document.querySelector('.progress-bar.bg-warning');
+
+      if (activeUsersProgress && adminStats.activeUsersToday && adminStats.totalUsers) {
+        const percentage = (adminStats.activeUsersToday / adminStats.totalUsers) * 100;
+        activeUsersProgress.style.width = `${percentage}%`;
+        activeUsersProgress.nextElementSibling.textContent = 
+          `${adminStats.activeUsersToday} out of ${adminStats.totalUsers} users`;
+      }
+
+      if (successRateProgress && adminStats.successRate) {
+        successRateProgress.style.width = `${adminStats.successRate}%`;
+        successRateProgress.nextElementSibling.textContent = `${adminStats.successRate}% success rate`;
+      }
+
+      if (satisfactionProgress && adminStats.averageRating) {
+        const percentage = (adminStats.averageRating / 5) * 100;
+        satisfactionProgress.style.width = `${percentage}%`;
+        satisfactionProgress.nextElementSibling.textContent = `${adminStats.averageRating}/5 average rating`;
+      }
+    }
+
+    // Load pending skill approvals
+    async function loadPendingApprovals() {
+      try {
+        const response = await fetch('/api/admin/approvals', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        
+        if (response.ok) {
+          pendingApprovals = await response.json();
+          renderPendingApprovals();
+        } else {
+          showToast('Failed to load pending approvals', 'error');
+          loadDemoApprovals();
+        }
+      } catch (error) {
+        console.error('Error loading approvals:', error);
+        loadDemoApprovals();
+      }
+    }
+
+    // Render pending approvals
+    function renderPendingApprovals() {
+      const container = document.querySelector('.card-body');
+      if (!container) return;
+
+      // Find the approvals section
+      const approvalsSection = container.querySelector('.swap-request.pending');
+      if (!approvalsSection) return;
+
+      const approvalsContainer = approvalsSection.parentElement;
+      approvalsContainer.innerHTML = '';
+
+      if (pendingApprovals.length === 0) {
+        approvalsContainer.innerHTML = `
+          <div class="text-center text-muted py-4">
+            <i class="fas fa-check-circle fa-2x mb-3"></i>
+            <p>No pending approvals</p>
+          </div>
+        `;
+        return;
+      }
+
+      pendingApprovals.forEach(approval => {
+        const approvalElement = document.createElement('div');
+        approvalElement.className = 'swap-request pending';
+        approvalElement.innerHTML = `
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <h6 class="fw-bold">User: ${approval.userName}</h6>
+              <p class="text-muted mb-2">Skill: "${approval.skillName}"</p>
+              <p class="text-muted mb-2">Description: ${approval.description}</p>
+              <small class="text-muted">Submitted ${formatTimeAgo(approval.submittedAt)}</small>
+            </div>
+            <div class="d-flex gap-2">
+              <button class="btn btn-success btn-sm" onclick="approveSkill(${approval.id})">Approve</button>
+              <button class="btn btn-danger btn-sm" onclick="rejectSkill(${approval.id})">Reject</button>
+            </div>
+          </div>
+        `;
+        approvalsContainer.appendChild(approvalElement);
+      });
+    }
+
+    // Load user reports
+    async function loadUserReports() {
+      try {
+        const response = await fetch('/api/admin/reports', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        
+        if (response.ok) {
+          userReports = await response.json();
+          renderUserReports();
+        } else {
+          showToast('Failed to load user reports', 'error');
+          loadDemoReports();
+        }
+      } catch (error) {
+        console.error('Error loading reports:', error);
+        loadDemoReports();
+      }
+    }
+
+    // Render user reports
+    function renderUserReports() {
+      const reportsContainer = document.querySelector('.card:nth-child(2) .card-body');
+      if (!reportsContainer) return;
+
+      const reportsSection = reportsContainer.querySelector('.swap-request.rejected');
+      if (!reportsSection) return;
+
+      const container = reportsSection.parentElement;
+      container.innerHTML = '';
+
+      if (userReports.length === 0) {
+        container.innerHTML = `
+          <div class="text-center text-muted py-4">
+            <i class="fas fa-shield-alt fa-2x mb-3"></i>
+            <p>No user reports</p>
+          </div>
+        `;
+        return;
+      }
+
+      userReports.forEach(report => {
+        const reportElement = document.createElement('div');
+        reportElement.className = 'swap-request rejected';
+        reportElement.innerHTML = `
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <h6 class="fw-bold">Reported User: ${report.reportedUserName}</h6>
+              <p class="text-muted mb-2">Reason: ${report.reason}</p>
+              <p class="text-muted mb-2">Reported by: ${report.reportedBy}</p>
+              <small class="text-muted">Reported ${formatTimeAgo(report.reportedAt)}</small>
+            </div>
+            <div class="d-flex gap-2">
+              <button class="btn btn-warning btn-sm" onclick="warnUser('${report.reportedUserId}')">Warn User</button>
+              <button class="btn btn-danger btn-sm" onclick="banUser('${report.reportedUserId}')">Ban User</button>
+            </div>
+          </div>
+        `;
+        container.appendChild(reportElement);
+      });
+    }
+
+    // Load recent activity
+    async function loadRecentActivity() {
+      try {
+        const response = await fetch('/api/admin/activity', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        
+        if (response.ok) {
+          recentActivity = await response.json();
+          renderRecentActivity();
+        } else {
+          showToast('Failed to load recent activity', 'error');
+          loadDemoActivity();
+        }
+      } catch (error) {
+        console.error('Error loading activity:', error);
+        loadDemoActivity();
+      }
+    }
+
+    // Render recent activity
+    function renderRecentActivity() {
+      const activityContainer = document.querySelector('.card:last-child .card-body');
+      if (!activityContainer) return;
+
+      activityContainer.innerHTML = '';
+
+      if (recentActivity.length === 0) {
+        activityContainer.innerHTML = `
+          <div class="text-center text-muted py-4">
+            <i class="fas fa-clock fa-2x mb-3"></i>
+            <p>No recent activity</p>
+          </div>
+        `;
+        return;
+      }
+
+      recentActivity.forEach(activity => {
+        const activityElement = document.createElement('div');
+        activityElement.className = 'd-flex align-items-center mb-3';
+        
+        const iconClass = getActivityIcon(activity.type);
+        const bgClass = getActivityBgClass(activity.type);
+        
+        activityElement.innerHTML = `
+          <div class="${bgClass} rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+            <i class="${iconClass} text-white"></i>
+          </div>
+          <div>
+            <p class="mb-1"><strong>${activity.title}</strong> ${activity.description}</p>
+            <small class="text-muted">${formatTimeAgo(activity.createdAt)}</small>
+          </div>
+        `;
+        activityContainer.appendChild(activityElement);
+      });
+    }
+
+    // Load system status
+    async function loadSystemStatus() {
+      try {
+        const response = await fetch('/api/admin/system-status', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        
+        if (response.ok) {
+          systemStatus = await response.json();
+          updateSystemStatus();
+        } else {
+          loadDemoSystemStatus();
+        }
+      } catch (error) {
+        console.error('Error loading system status:', error);
+        loadDemoSystemStatus();
+      }
+    }
+
+    // Update system status display
+    function updateSystemStatus() {
+      const statusContainer = document.querySelector('.card:last-child .card-body');
+      if (!statusContainer) return;
+
+      const statusItems = statusContainer.querySelectorAll('.d-flex.justify-content-between');
+      
+      statusItems.forEach((item, index) => {
+        const serviceName = item.querySelector('span:first-child').textContent.toLowerCase();
+        const statusBadge = item.querySelector('.badge');
+        
+        if (systemStatus[serviceName]) {
+          const status = systemStatus[serviceName];
+          statusBadge.className = `badge ${status === 'online' ? 'bg-success' : status === 'slow' ? 'bg-warning' : 'bg-danger'}`;
+          statusBadge.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+        }
+      });
+    }
+
+    // Helper functions
+    function getActivityIcon(type) {
+      const icons = {
+        'skill_approved': 'fas fa-check',
+        'user_banned': 'fas fa-ban',
+        'announcement_sent': 'fas fa-bullhorn',
+        'swap_completed': 'fas fa-exchange-alt',
+        'user_registered': 'fas fa-user-plus'
+      };
+      return icons[type] || 'fas fa-info-circle';
+    }
+
+    function getActivityBgClass(type) {
+      const bgClasses = {
+        'skill_approved': 'bg-success',
+        'user_banned': 'bg-danger',
+        'announcement_sent': 'bg-info',
+        'swap_completed': 'bg-primary',
+        'user_registered': 'bg-secondary'
+      };
+      return bgClasses[type] || 'bg-info';
+    }
+
+    function formatTimeAgo(timestamp) {
+      const now = new Date();
+      const time = new Date(timestamp);
+      const diffInHours = Math.floor((now - time) / (1000 * 60 * 60));
+      
+      if (diffInHours < 1) return 'Just now';
+      if (diffInHours < 24) return `${diffInHours} hours ago`;
+      
+      const diffInDays = Math.floor(diffInHours / 24);
+      return `${diffInDays} days ago`;
+    }
+
+    // Demo data fallback functions
+    function loadDemoStats() {
+      adminStats = {
+        totalUsers: 1247,
+        pendingSwaps: 89,
+        completedSwaps: 156,
+        reportedIssues: 23,
+        activeUsersToday: 934,
+        successRate: 88,
+        averageRating: 4.6
+      };
+      updateStatsDisplay();
+    }
+
+    function loadDemoApprovals() {
+      pendingApprovals = [
+        {
+          id: 1,
+          userId: 789,
+          userName: 'John Smith',
+          skillName: 'Advanced Hacking Techniques',
+          description: 'Learn to hack into systems and networks',
+          submittedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
+        }
+      ];
+      renderPendingApprovals();
+    }
+
+    function loadDemoReports() {
+      userReports = [
+        {
+          reportedUserId: 'alex',
+          reportedUserName: 'Alex Johnson',
+          reason: 'Inappropriate behavior during skill exchange',
+          reportedBy: 'Sarah Wilson',
+          reportedAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+        }
+      ];
+      renderUserReports();
+    }
+
+    function loadDemoActivity() {
+      recentActivity = [
+        {
+          id: 1,
+          type: 'skill_approved',
+          title: 'Skill approved',
+          description: '- "Digital Marketing" by Lisa Chen',
+          createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
+        }
+      ];
+      renderRecentActivity();
+    }
+
+    function loadDemoSystemStatus() {
+      systemStatus = {
+        database: 'online',
+        api: 'online',
+        email: 'online',
+        storage: 'slow'
+      };
+      updateSystemStatus();
+    }
+
+    // Admin action functions
+    async function approveSkill(skillId) {
       if (confirm('Are you sure you want to approve this skill?')) {
-        showToast('Skill approved successfully!', 'success');
-        // In real app, this would make an API call
-        setTimeout(() => {
-          location.reload();
-        }, 1500);
+        try {
+          const response = await fetch(`/api/admin/approvals/${skillId}/approve`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+          });
+          
+          if (response.ok) {
+            showToast('Skill approved successfully!', 'success');
+            loadPendingApprovals();
+            loadAdminStats();
+          } else {
+            showToast('Failed to approve skill', 'error');
+          }
+        } catch (error) {
+          console.error('Error approving skill:', error);
+          showToast('Error approving skill', 'error');
+        }
       }
     }
 
-    function rejectSkill(skillId) {
+    async function rejectSkill(skillId) {
       if (confirm('Are you sure you want to reject this skill?')) {
-        showToast('Skill rejected', 'info');
-        // In real app, this would make an API call
-        setTimeout(() => {
-          location.reload();
-        }, 1500);
+        try {
+          const response = await fetch(`/api/admin/approvals/${skillId}/reject`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+          });
+          
+          if (response.ok) {
+            showToast('Skill rejected', 'info');
+            loadPendingApprovals();
+          } else {
+            showToast('Failed to reject skill', 'error');
+          }
+        } catch (error) {
+          console.error('Error rejecting skill:', error);
+          showToast('Error rejecting skill', 'error');
+        }
       }
     }
 
-    function warnUser(userId) {
+    async function warnUser(userId) {
       if (confirm('Send warning to this user?')) {
-        showToast('Warning sent to user', 'warning');
+        try {
+          const response = await fetch(`/api/admin/users/${userId}/warn`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+          });
+          
+          if (response.ok) {
+            showToast('Warning sent to user', 'warning');
+            loadUserReports();
+          } else {
+            showToast('Failed to send warning', 'error');
+          }
+        } catch (error) {
+          console.error('Error warning user:', error);
+          showToast('Error warning user', 'error');
+        }
       }
     }
 
-    function banUser(userId) {
+    async function banUser(userId) {
       if (confirm('Are you sure you want to ban this user? This action cannot be undone.')) {
-        showToast('User banned successfully', 'success');
-        // In real app, this would make an API call
-        setTimeout(() => {
-          location.reload();
-        }, 1500);
+        try {
+          const response = await fetch(`/api/admin/users/${userId}/ban`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+          });
+          
+          if (response.ok) {
+            showToast('User banned successfully', 'success');
+            loadUserReports();
+            loadAdminStats();
+          } else {
+            showToast('Failed to ban user', 'error');
+          }
+        } catch (error) {
+          console.error('Error banning user:', error);
+          showToast('Error banning user', 'error');
+        }
       }
     }
 
-    function downloadReport(type) {
-      showToast(`Downloading ${type} report...`, 'info');
-      // In real app, this would trigger a file download
-      setTimeout(() => {
-        showToast(`${type} report downloaded successfully!`, 'success');
-      }, 2000);
+    async function downloadReport(type) {
+      try {
+        const response = await fetch(`/api/admin/reports/${type}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        
+        if (response.ok) {
+          const blob = await response.blob();
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `${type}_report_${new Date().toISOString().split('T')[0]}.csv`;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          document.body.removeChild(a);
+          
+          showToast(`${type} report downloaded successfully!`, 'success');
+        } else {
+          showToast(`Failed to download ${type} report`, 'error');
+        }
+      } catch (error) {
+        console.error('Error downloading report:', error);
+        showToast(`Error downloading ${type} report`, 'error');
+      }
     }
 
     function openAnnouncementModal() {
@@ -355,7 +853,7 @@
       modal.show();
     }
 
-    function sendAnnouncement() {
+    async function sendAnnouncement() {
       const title = document.getElementById('announcementTitle').value;
       const message = document.getElementById('announcementMessage').value;
       const type = document.querySelector('input[name="announcementType"]:checked').value;
@@ -365,19 +863,64 @@
         return;
       }
 
-      showToast('Announcement sent to all users!', 'success');
+      try {
+        const response = await fetch('/api/admin/announcements', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify({
+            title,
+            message,
+            type
+          })
+        });
+        
+        if (response.ok) {
+          showToast('Announcement sent to all users!', 'success');
 
-      // Close modal
-      const modal = bootstrap.Modal.getInstance(document.getElementById('announcementModal'));
-      modal.hide();
+          // Close modal
+          const modal = bootstrap.Modal.getInstance(document.getElementById('announcementModal'));
+          modal.hide();
 
-      // Reset form
-      document.getElementById('announcementForm').reset();
+          // Reset form
+          document.getElementById('announcementForm').reset();
+          
+          // Reload activity
+          loadRecentActivity();
+        } else {
+          showToast('Failed to send announcement', 'error');
+        }
+      } catch (error) {
+        console.error('Error sending announcement:', error);
+        showToast('Error sending announcement', 'error');
+      }
     }
 
-    function openMaintenanceModal() {
+    async function openMaintenanceModal() {
       if (confirm('Enable maintenance mode? This will temporarily disable the platform for all users.')) {
-        showToast('Maintenance mode enabled', 'warning');
+        try {
+          const response = await fetch('/api/admin/maintenance', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({
+              enabled: true
+            })
+          });
+          
+          if (response.ok) {
+            showToast('Maintenance mode enabled', 'warning');
+          } else {
+            showToast('Failed to enable maintenance mode', 'error');
+          }
+        } catch (error) {
+          console.error('Error enabling maintenance mode:', error);
+          showToast('Error enabling maintenance mode', 'error');
+        }
       }
     }
 
@@ -400,5 +943,67 @@
       }, 4000);
     }
   </script>
+
+  <!-- Footer -->
+  <footer class="py-5 mt-5" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); color: var(--text-dark);">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4 mb-4">
+          <h5 class="fw-bold mb-3" style="color: var(--primary-color);">SkillSwap Admin</h5>
+          <p class="text-muted">Administrative panel for managing the Skill Swap platform. Monitor users, content, and platform performance.</p>
+        </div>
+        <div class="col-lg-2 mb-4">
+          <h6 class="fw-bold mb-3" style="color: var(--primary-color);">Platform</h6>
+          <ul class="list-unstyled">
+            <li><a href="index.html#features" class="text-muted text-decoration-none">Features</a></li>
+            <li><a href="index.html#how-it-works" class="text-muted text-decoration-none">How it Works</a></li>
+            <li><a href="#" class="text-muted text-decoration-none">Safety</a></li>
+            <li><a href="mailto:nishthakohli444@gmail.com" class="text-muted text-decoration-none">Support</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-2 mb-4">
+          <h6 class="fw-bold mb-3" style="color: var(--primary-color);">Community</h6>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-muted text-decoration-none">Guidelines</a></li>
+            <li><a href="#" class="text-muted text-decoration-none">Success Stories</a></li>
+            <li><a href="#" class="text-muted text-decoration-none">Blog</a></li>
+            <li><a href="#" class="text-muted text-decoration-none">Events</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-2 mb-4">
+          <h6 class="fw-bold mb-3" style="color: var(--primary-color);">Company</h6>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-muted text-decoration-none">About Us</a></li>
+            <li><a href="#" class="text-muted text-decoration-none">Careers</a></li>
+            <li><a href="#" class="text-muted text-decoration-none">Press</a></li>
+            <li><a href="mailto:nishthakohli444@gmail.com" class="text-muted text-decoration-none">Contact</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-2 mb-4">
+          <h6 class="fw-bold mb-3" style="color: var(--primary-color);">Support</h6>
+          <ul class="list-unstyled">
+            <li><a href="mailto:nishthakohli444@gmail.com" class="text-muted text-decoration-none">Email Support</a></li>
+            <li><a href="#" class="text-muted text-decoration-none">Help Center</a></li>
+            <li><a href="#" class="text-muted text-decoration-none">FAQ</a></li>
+            <li><a href="#" class="text-muted text-decoration-none">Report Issue</a></li>
+          </ul>
+        </div>
+      </div>
+      <hr class="my-4" style="border-color: var(--border-color);">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <p class="text-muted mb-0">&copy; 2024 SkillSwap. All rights reserved.</p>
+        </div>
+        <div class="col-md-6 text-end">
+          <div class="d-flex gap-3 justify-content-end">
+            <a href="#" class="text-muted"><i class="fab fa-facebook"></i></a>
+            <a href="#" class="text-muted"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="text-muted"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="text-muted"><i class="fab fa-linkedin"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
 </body>
 </html> 

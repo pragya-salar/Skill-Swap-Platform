@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Debug Register | Skill Swap</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .debug-info { background: #f8f9fa; padding: 15px; margin: 10px 0; border-radius: 5px; }
+    .error { color: red; }
+    .success { color: green; }
+  </style>
+</head>
+<body>
+  <div class="container mt-5">
+    <h2>Debug Registration</h2>
+    
+    <div class="debug-info">
+      <h4>Debug Information:</h4>
+      <div id="debugInfo"></div>
+    </div>
+
+    <form id="debugForm">
+      <div class="mb-3">
+        <label for="displayName" class="form-label">Display Name</label>
+        <input type="text" class="form-control" id="displayName" value="Test User">
+      </div>
+
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" value="test@example.com">
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control" id="password" value="password123">
+      </div>
+
+      <button type="submit" class="btn btn-primary">Test Registration</button>
+    </form>
+
+    <div class="mt-4">
+      <h4>Response:</h4>
+      <div id="response" class="debug-info"></div>
+    </div>
+  </div>
+
+  <script>
+    // Debug information
+    const debugInfo = document.getElementById('debugInfo');
+    const responseDiv = document.getElementById('response');
+
+    // Check if API file exists
+    async function checkAPIFile() {
+      try {
+        const response = await fetch('backend/api/auth/register.php');
+        debugInfo.innerHTML += `<div class="success">✅ API file accessible</div>`;
+      } catch (error) {
+        debugInfo.innerHTML += `<div class="error">❌ API file not accessible: ${error.message}</div>`;
+      }
+    }
+
+    // Test registration
+    document.getElementById('debugForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const displayName = document.getElementById('displayName').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      responseDiv.innerHTML = '<div>Testing registration...</div>';
+
+      try {
+        const response = await fetch('backend/api/auth/register.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: email,
+            password: password,
+            displayName: displayName
+          })
+        });
+
+        const data = await response.json();
+        
+        responseDiv.innerHTML = `
+          <div><strong>Status:</strong> ${response.status}</div>
+          <div><strong>Response:</strong></div>
+          <pre>${JSON.stringify(data, null, 2)}</pre>
+        `;
+
+      } catch (error) {
+        responseDiv.innerHTML = `
+          <div class="error"><strong>Error:</strong> ${error.message}</div>
+        `;
+      }
+    });
+
+    // Initialize debug info
+    checkAPIFile();
+    debugInfo.innerHTML += `<div>Current URL: ${window.location.href}</div>`;
+    debugInfo.innerHTML += `<div>API Base URL: http://localhost/skillswap/backend/api</div>`;
+  </script>
+</body>
+</html> 

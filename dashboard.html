@@ -18,13 +18,13 @@
         <div class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
             <img src="https://via.placeholder.com/32x32/714b67/ffffff?text=U" class="rounded-circle me-2" width="32" height="32">
-            John Doe
+            <span id="userDisplayName">Loading...</span>
           </a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="profile.html">My Profile</a></li>
             <li><a class="dropdown-item" href="settings.html">Settings</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="login.html">Logout</a></li>
+            <li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
           </ul>
         </div>
       </div>
@@ -35,7 +35,7 @@
     <!-- Welcome Section -->
     <div class="row mb-5">
       <div class="col-lg-8">
-        <h1 class="fw-bold text-dark mb-3">Welcome back, John! 👋</h1>
+        <h1 class="fw-bold text-dark mb-3">Welcome back, <span id="welcomeName">User</span>! 👋</h1>
         <p class="text-muted">Ready to share your skills and learn something new today?</p>
       </div>
       <div class="col-lg-4 text-end">
@@ -49,25 +49,25 @@
     <div class="row mb-5">
       <div class="col-md-3 mb-3">
         <div class="stats-card">
-          <div class="stats-number">5</div>
+          <div class="stats-number" id="skillsOffered">0</div>
           <div class="text-muted">Skills Offered</div>
         </div>
       </div>
       <div class="col-md-3 mb-3">
         <div class="stats-card">
-          <div class="stats-number">3</div>
+          <div class="stats-number" id="skillsWanted">0</div>
           <div class="text-muted">Skills Wanted</div>
         </div>
       </div>
       <div class="col-md-3 mb-3">
         <div class="stats-card">
-          <div class="stats-number">12</div>
+          <div class="stats-number" id="totalSwaps">0</div>
           <div class="text-muted">Total Swaps</div>
         </div>
       </div>
       <div class="col-md-3 mb-3">
         <div class="stats-card">
-          <div class="stats-number">4.8</div>
+          <div class="stats-number" id="userRating">0.0</div>
           <div class="text-muted">Rating</div>
         </div>
       </div>
@@ -104,38 +104,32 @@
         <!-- Profile Section -->
         <div class="profile-section">
           <div class="text-center mb-4">
-            <img src="https://via.placeholder.com/120x120/714b67/ffffff?text=JD" class="profile-avatar mb-3">
-            <h4 class="fw-bold">John Doe</h4>
-            <p class="text-muted">Mumbai, India</p>
+            <img src="https://via.placeholder.com/120x120/714b67/ffffff?text=U" class="profile-avatar mb-3" id="profileAvatar">
+            <h4 class="fw-bold" id="profileName">Loading...</h4>
+            <p class="text-muted" id="profileLocation">Loading...</p>
             <div class="d-flex justify-content-center gap-2">
-              <span class="badge bg-success">Online</span>
-              <span class="badge bg-secondary">Available</span>
+              <span class="badge bg-success" id="onlineStatus">Online</span>
+              <span class="badge bg-secondary" id="availableStatus">Available</span>
             </div>
           </div>
           
           <div class="mb-4">
             <h6 class="fw-bold mb-3">Skills I Can Offer</h6>
-            <div class="d-flex flex-wrap gap-2">
-              <span class="skill-tag">Photoshop</span>
-              <span class="skill-tag">Excel</span>
-              <span class="skill-tag">Spanish</span>
-              <span class="skill-tag">Web Design</span>
-              <span class="skill-tag">Cooking</span>
+            <div class="d-flex flex-wrap gap-2" id="offeredSkills">
+              <span class="text-muted">Loading skills...</span>
             </div>
           </div>
           
           <div class="mb-4">
             <h6 class="fw-bold mb-3">Skills I Want to Learn</h6>
-            <div class="d-flex flex-wrap gap-2">
-              <span class="skill-tag wanted">Video Editing</span>
-              <span class="skill-tag wanted">French</span>
-              <span class="skill-tag wanted">Data Analysis</span>
+            <div class="d-flex flex-wrap gap-2" id="wantedSkills">
+              <span class="text-muted">Loading skills...</span>
             </div>
           </div>
           
           <div class="mb-3">
             <h6 class="fw-bold mb-2">Availability</h6>
-            <p class="text-muted small">Weekends, Evenings (6 PM - 10 PM)</p>
+            <p class="text-muted small" id="availability">Loading...</p>
           </div>
           
           <button class="btn btn-outline-primary w-100" onclick="editProfile()">
@@ -151,49 +145,10 @@
           <div class="card-header">
             <h5 class="mb-0">Swap Requests</h5>
           </div>
-          <div class="card-body">
-            <div class="swap-request pending">
-              <div class="d-flex justify-content-between align-items-start">
-                <div>
-                  <h6 class="fw-bold">Sarah Johnson</h6>
-                  <p class="text-muted mb-2">Wants to learn: <strong>Photoshop</strong></p>
-                  <p class="text-muted mb-2">Can offer: <strong>Video Editing</strong></p>
-                  <small class="text-muted">Requested 2 hours ago</small>
-                </div>
-                <div class="d-flex gap-2">
-                  <button class="btn btn-success btn-sm" onclick="acceptSwap(1)">Accept</button>
-                  <button class="btn btn-danger btn-sm" onclick="rejectSwap(1)">Reject</button>
-                </div>
-              </div>
-            </div>
-            
-            <div class="swap-request accepted">
-              <div class="d-flex justify-content-between align-items-start">
-                <div>
-                  <h6 class="fw-bold">Mike Chen</h6>
-                  <p class="text-muted mb-2">Wants to learn: <strong>Excel</strong></p>
-                  <p class="text-muted mb-2">Can offer: <strong>Data Analysis</strong></p>
-                  <small class="text-success">Accepted 1 day ago</small>
-                </div>
-                <div>
-                  <button class="btn btn-primary btn-sm" onclick="viewSwapDetails(2)">View Details</button>
-                </div>
-              </div>
-            </div>
-            
-            <div class="swap-request">
-              <div class="d-flex justify-content-between align-items-start">
-                <div>
-                  <h6 class="fw-bold">Emma Wilson</h6>
-                  <p class="text-muted mb-2">Wants to learn: <strong>Spanish</strong></p>
-                  <p class="text-muted mb-2">Can offer: <strong>French</strong></p>
-                  <small class="text-muted">Requested 3 days ago</small>
-                </div>
-                <div class="d-flex gap-2">
-                  <button class="btn btn-success btn-sm" onclick="acceptSwap(3)">Accept</button>
-                  <button class="btn btn-danger btn-sm" onclick="rejectSwap(3)">Reject</button>
-                </div>
-              </div>
+          <div class="card-body" id="swapRequests">
+            <div class="text-center text-muted">
+              <i class="fas fa-inbox fa-2x mb-3"></i>
+              <p>No swap requests yet</p>
             </div>
           </div>
         </div>
@@ -203,35 +158,10 @@
           <div class="card-header">
             <h5 class="mb-0">Recent Activity</h5>
           </div>
-          <div class="card-body">
-            <div class="d-flex align-items-center mb-3">
-              <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                <i class="fas fa-star text-white"></i>
-              </div>
-              <div>
-                <p class="mb-1"><strong>New rating received</strong> from Sarah Johnson</p>
-                <small class="text-muted">5 stars - "Great Photoshop teacher!"</small>
-              </div>
-            </div>
-            
-            <div class="d-flex align-items-center mb-3">
-              <div class="bg-success rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                <i class="fas fa-check text-white"></i>
-              </div>
-              <div>
-                <p class="mb-1"><strong>Swap completed</strong> with Mike Chen</p>
-                <small class="text-muted">Excel for Data Analysis exchange</small>
-              </div>
-            </div>
-            
-            <div class="d-flex align-items-center mb-3">
-              <div class="bg-info rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                <i class="fas fa-plus text-white"></i>
-              </div>
-              <div>
-                <p class="mb-1"><strong>New skill added</strong> to your profile</p>
-                <small class="text-muted">Web Design skill added</small>
-              </div>
+          <div class="card-body" id="recentActivity">
+            <div class="text-center text-muted">
+              <i class="fas fa-clock fa-2x mb-3"></i>
+              <p>No recent activity</p>
             </div>
           </div>
         </div>
@@ -270,7 +200,7 @@
               <label for="skillDescription" class="form-label">Description (Optional)</label>
               <textarea class="form-control" id="skillDescription" rows="3" placeholder="Brief description of your skill level or what you want to learn"></textarea>
             </div>
-            
+
             <div class="mb-3">
               <label for="skillLevel" class="form-label">Skill Level</label>
               <select class="form-control" id="skillLevel">
@@ -292,7 +222,159 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://kit.fontawesome.com/your-fontawesome-kit.js"></script>
+  <script src="js/api.js"></script>
   <script>
+    // Global user data
+    let currentUser = null;
+    let userSkills = { offered: [], wanted: [] };
+
+    // Load user data when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      loadUserData();
+      loadUserSkills();
+    });
+
+    // Load current user data
+    function loadUserData() {
+      try {
+        // Get user data from localStorage
+        const userData = localStorage.getItem('currentUser');
+        if (userData) {
+          currentUser = JSON.parse(userData);
+          updateUserInterface();
+        } else {
+          // Fallback to demo data
+          currentUser = {
+            id: 2,
+            displayName: 'John Doe',
+            email: 'john@example.com',
+            role: 'user',
+            location: 'Mumbai, India',
+            rating: 4.8,
+            totalSwaps: 12,
+            isOnline: true,
+            isAvailable: true
+          };
+          updateUserInterface();
+        }
+      } catch (error) {
+        console.error('Error loading user data:', error);
+        loadDemoData();
+      }
+    }
+
+    // Update UI with user data
+    function updateUserInterface() {
+      if (!currentUser) return;
+
+      // Update navigation
+      const userDisplayName = document.getElementById('userDisplayName');
+      if (userDisplayName) {
+        userDisplayName.textContent = currentUser.displayName;
+      }
+
+      // Update welcome message
+      const welcomeName = document.getElementById('welcomeName');
+      if (welcomeName) {
+        welcomeName.textContent = currentUser.displayName.split(' ')[0]; // First name only
+      }
+
+      // Update profile section
+      const profileName = document.getElementById('profileName');
+      const profileLocation = document.getElementById('profileLocation');
+      const profileAvatar = document.getElementById('profileAvatar');
+      const onlineStatus = document.getElementById('onlineStatus');
+      const availableStatus = document.getElementById('availableStatus');
+      const availability = document.getElementById('availability');
+
+      if (profileName) profileName.textContent = currentUser.displayName;
+      if (profileLocation) profileLocation.textContent = currentUser.location || 'Location not set';
+      if (profileAvatar) profileAvatar.src = `https://via.placeholder.com/120x120/714b67/ffffff?text=${currentUser.displayName.charAt(0)}`;
+      if (onlineStatus) onlineStatus.style.display = currentUser.isOnline ? 'inline' : 'none';
+      if (availableStatus) availableStatus.style.display = currentUser.isAvailable ? 'inline' : 'none';
+      if (availability) availability.textContent = currentUser.availability || 'Weekends, Evenings (6 PM - 10 PM)';
+
+      // Update stats
+      updateStats();
+    }
+
+    // Load user skills
+    async function loadUserSkills() {
+      try {
+        const response = await api.getUserSkills();
+        if (response.success) {
+          userSkills = response.skills;
+          renderUserSkills();
+        }
+      } catch (error) {
+        console.error('Error loading skills:', error);
+        // Use demo skills as fallback
+        userSkills = {
+          offered: ['Photoshop', 'Excel', 'Spanish', 'Web Design', 'Cooking'],
+          wanted: ['Video Editing', 'French', 'Data Analysis']
+        };
+        renderUserSkills();
+      }
+    }
+
+    // Render user skills in UI
+    function renderUserSkills() {
+      const offeredContainer = document.getElementById('offeredSkills');
+      const wantedContainer = document.getElementById('wantedSkills');
+
+      if (offeredContainer) {
+        if (userSkills.offered && userSkills.offered.length > 0) {
+          offeredContainer.innerHTML = userSkills.offered.map(skill => 
+            `<span class="skill-tag">${skill.name || skill}</span>`
+          ).join('');
+        } else {
+          offeredContainer.innerHTML = '<span class="text-muted">No skills added yet</span>';
+        }
+      }
+
+      if (wantedContainer) {
+        if (userSkills.wanted && userSkills.wanted.length > 0) {
+          wantedContainer.innerHTML = userSkills.wanted.map(skill => 
+            `<span class="skill-tag wanted">${skill.name || skill}</span>`
+          ).join('');
+        } else {
+          wantedContainer.innerHTML = '<span class="text-muted">No skills wanted yet</span>';
+        }
+      }
+
+      // Update stats
+      updateStats();
+    }
+
+    // Update stats with real data
+    function updateStats() {
+      const skillsOffered = document.getElementById('skillsOffered');
+      const skillsWanted = document.getElementById('skillsWanted');
+      const totalSwaps = document.getElementById('totalSwaps');
+      const userRating = document.getElementById('userRating');
+
+      if (skillsOffered) skillsOffered.textContent = userSkills.offered?.length || 0;
+      if (skillsWanted) skillsWanted.textContent = userSkills.wanted?.length || 0;
+      if (totalSwaps) totalSwaps.textContent = currentUser?.totalSwaps || 0;
+      if (userRating) userRating.textContent = currentUser?.rating || '0.0';
+    }
+
+    // Demo data fallback
+    function loadDemoData() {
+      currentUser = {
+        id: 2,
+        displayName: 'Demo User',
+        email: 'demo@example.com',
+        role: 'user',
+        location: 'Demo City, India',
+        rating: 4.5,
+        totalSwaps: 8,
+        isOnline: true,
+        isAvailable: true
+      };
+      updateUserInterface();
+    }
+
     // Search functionality
     function searchUsers() {
       const searchTerm = document.getElementById('searchInput').value;
@@ -300,35 +382,10 @@
       
       if (searchTerm.trim()) {
         showToast(`Searching for "${searchTerm}"...`, 'info');
-        // Simulate search - in real app, this would make an API call
         setTimeout(() => {
           window.location.href = `search-results.html?q=${encodeURIComponent(searchTerm)}&category=${category}`;
         }, 1000);
       }
-    }
-
-    // Swap request functions
-    function acceptSwap(swapId) {
-      showToast('Swap request accepted!', 'success');
-      // In real app, this would make an API call
-      setTimeout(() => {
-        location.reload();
-      }, 1500);
-    }
-
-    function rejectSwap(swapId) {
-      if (confirm('Are you sure you want to reject this swap request?')) {
-        showToast('Swap request rejected', 'info');
-        // In real app, this would make an API call
-        setTimeout(() => {
-          location.reload();
-        }, 1500);
-      }
-    }
-
-    function viewSwapDetails(swapId) {
-      showToast('Opening swap details...', 'info');
-      // In real app, this would open a modal or navigate to details page
     }
 
     // Modal functions
@@ -337,7 +394,7 @@
       modal.show();
     }
 
-    function saveSkill() {
+    async function saveSkill() {
       const skillName = document.getElementById('skillName').value;
       const skillType = document.querySelector('input[name="skillType"]:checked').value;
       
@@ -346,23 +403,41 @@
         return;
       }
       
-      showToast(`Skill "${skillName}" added successfully!`, 'success');
-      
-      // Close modal
-      const modal = bootstrap.Modal.getInstance(document.getElementById('addSkillModal'));
-      modal.hide();
-      
-      // Reset form
-      document.getElementById('addSkillForm').reset();
-      
-      // Reload page to show new skill
-      setTimeout(() => {
-        location.reload();
-      }, 1500);
+      try {
+        const response = await api.addSkill({
+          name: skillName,
+          type: skillType,
+          level: document.getElementById('skillLevel').value,
+          description: document.getElementById('skillDescription').value
+        });
+        
+        if (response.success) {
+          showToast(`Skill "${skillName}" added successfully!`, 'success');
+          
+          // Close modal
+          const modal = bootstrap.Modal.getInstance(document.getElementById('addSkillModal'));
+          modal.hide();
+          
+          // Reset form
+          document.getElementById('addSkillForm').reset();
+          
+          // Reload skills
+          loadUserSkills();
+        } else {
+          showToast('Failed to add skill', 'error');
+        }
+      } catch (error) {
+        console.error('Error adding skill:', error);
+        showToast('Error adding skill', 'error');
+      }
     }
 
     function editProfile() {
       window.location.href = 'profile-setup.html';
+    }
+
+    function logout() {
+      api.logout();
     }
 
     function showToast(message, type = 'info') {
@@ -391,5 +466,67 @@
       }
     });
   </script>
+
+  <!-- Footer -->
+  <footer class="py-5 mt-5" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); color: var(--text-dark);">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4 mb-4">
+          <h5 class="fw-bold mb-3" style="color: var(--primary-color);">SkillSwap</h5>
+          <p class="text-muted">Connect, learn, and grow together through skill exchange. Join our community of learners and teachers.</p>
+        </div>
+        <div class="col-lg-2 mb-4">
+          <h6 class="fw-bold mb-3" style="color: var(--primary-color);">Platform</h6>
+          <ul class="list-unstyled">
+            <li><a href="index.html#features" class="text-muted text-decoration-none">Features</a></li>
+            <li><a href="index.html#how-it-works" class="text-muted text-decoration-none">How it Works</a></li>
+            <li><a href="#" class="text-muted text-decoration-none">Safety</a></li>
+            <li><a href="mailto:nishthakohli444@gmail.com" class="text-muted text-decoration-none">Support</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-2 mb-4">
+          <h6 class="fw-bold mb-3" style="color: var(--primary-color);">Community</h6>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-muted text-decoration-none">Guidelines</a></li>
+            <li><a href="#" class="text-muted text-decoration-none">Success Stories</a></li>
+            <li><a href="#" class="text-muted text-decoration-none">Blog</a></li>
+            <li><a href="#" class="text-muted text-decoration-none">Events</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-2 mb-4">
+          <h6 class="fw-bold mb-3" style="color: var(--primary-color);">Company</h6>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-muted text-decoration-none">About Us</a></li>
+            <li><a href="#" class="text-muted text-decoration-none">Careers</a></li>
+            <li><a href="#" class="text-muted text-decoration-none">Press</a></li>
+            <li><a href="mailto:nishthakohli444@gmail.com" class="text-muted text-decoration-none">Contact</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-2 mb-4">
+          <h6 class="fw-bold mb-3" style="color: var(--primary-color);">Support</h6>
+          <ul class="list-unstyled">
+            <li><a href="mailto:nishthakohli444@gmail.com" class="text-muted text-decoration-none">Email Support</a></li>
+            <li><a href="#" class="text-muted text-decoration-none">Help Center</a></li>
+            <li><a href="#" class="text-muted text-decoration-none">FAQ</a></li>
+            <li><a href="#" class="text-muted text-decoration-none">Report Issue</a></li>
+          </ul>
+        </div>
+      </div>
+      <hr class="my-4" style="border-color: var(--border-color);">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <p class="text-muted mb-0">&copy; 2024 SkillSwap. All rights reserved.</p>
+        </div>
+        <div class="col-md-6 text-end">
+          <div class="d-flex gap-3 justify-content-end">
+            <a href="#" class="text-muted"><i class="fab fa-facebook"></i></a>
+            <a href="#" class="text-muted"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="text-muted"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="text-muted"><i class="fab fa-linkedin"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>

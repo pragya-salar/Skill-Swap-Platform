@@ -6,7 +6,6 @@
   <title>Dashboard | Skill Swap</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -19,13 +18,13 @@
         <div class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
             <img src="https://via.placeholder.com/32x32/714b67/ffffff?text=U" class="rounded-circle me-2" width="32" height="32">
-            John Doe
+            <span id="userDisplayName">Loading...</span>
           </a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="profile.html">My Profile</a></li>
             <li><a class="dropdown-item" href="settings.html">Settings</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="login.html">Logout</a></li>
+            <li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
           </ul>
         </div>
       </div>
@@ -36,7 +35,7 @@
     <!-- Welcome Section -->
     <div class="row mb-5">
       <div class="col-lg-8">
-        <h1 class="fw-bold text-dark mb-3">Welcome back, John! 👋</h1>
+        <h1 class="fw-bold text-dark mb-3">Welcome back, <span id="welcomeName">User</span>! 👋</h1>
         <p class="text-muted">Ready to share your skills and learn something new today?</p>
       </div>
       <div class="col-lg-4 text-end">
@@ -50,25 +49,25 @@
     <div class="row mb-5">
       <div class="col-md-3 mb-3">
         <div class="stats-card">
-          <div class="stats-number">5</div>
+          <div class="stats-number" id="skillsOffered">0</div>
           <div class="text-muted">Skills Offered</div>
         </div>
       </div>
       <div class="col-md-3 mb-3">
         <div class="stats-card">
-          <div class="stats-number">3</div>
+          <div class="stats-number" id="skillsWanted">0</div>
           <div class="text-muted">Skills Wanted</div>
         </div>
       </div>
       <div class="col-md-3 mb-3">
         <div class="stats-card">
-          <div class="stats-number">12</div>
+          <div class="stats-number" id="totalSwaps">0</div>
           <div class="text-muted">Total Swaps</div>
         </div>
       </div>
       <div class="col-md-3 mb-3">
         <div class="stats-card">
-          <div class="stats-number">4.8</div>
+          <div class="stats-number" id="userRating">0.0</div>
           <div class="text-muted">Rating</div>
         </div>
       </div>
@@ -105,38 +104,32 @@
         <!-- Profile Section -->
         <div class="profile-section">
           <div class="text-center mb-4">
-            <img src="https://via.placeholder.com/120x120/714b67/ffffff?text=JD" class="profile-avatar mb-3">
-            <h4 class="fw-bold">John Doe</h4>
-            <p class="text-muted">Mumbai, India</p>
+            <img src="https://via.placeholder.com/120x120/714b67/ffffff?text=U" class="profile-avatar mb-3" id="profileAvatar">
+            <h4 class="fw-bold" id="profileName">Loading...</h4>
+            <p class="text-muted" id="profileLocation">Loading...</p>
             <div class="d-flex justify-content-center gap-2">
-              <span class="badge bg-success">Online</span>
-              <span class="badge bg-secondary">Available</span>
+              <span class="badge bg-success" id="onlineStatus">Online</span>
+              <span class="badge bg-secondary" id="availableStatus">Available</span>
             </div>
           </div>
           
           <div class="mb-4">
             <h6 class="fw-bold mb-3">Skills I Can Offer</h6>
-            <div class="d-flex flex-wrap gap-2">
-              <span class="skill-tag">Photoshop</span>
-              <span class="skill-tag">Excel</span>
-              <span class="skill-tag">Spanish</span>
-              <span class="skill-tag">Web Design</span>
-              <span class="skill-tag">Cooking</span>
+            <div class="d-flex flex-wrap gap-2" id="offeredSkills">
+              <span class="text-muted">Loading skills...</span>
             </div>
           </div>
           
           <div class="mb-4">
             <h6 class="fw-bold mb-3">Skills I Want to Learn</h6>
-            <div class="d-flex flex-wrap gap-2">
-              <span class="skill-tag wanted">Video Editing</span>
-              <span class="skill-tag wanted">French</span>
-              <span class="skill-tag wanted">Data Analysis</span>
+            <div class="d-flex flex-wrap gap-2" id="wantedSkills">
+              <span class="text-muted">Loading skills...</span>
             </div>
           </div>
           
           <div class="mb-3">
             <h6 class="fw-bold mb-2">Availability</h6>
-            <p class="text-muted small">Weekends, Evenings (6 PM - 10 PM)</p>
+            <p class="text-muted small" id="availability">Loading...</p>
           </div>
           
           <button class="btn btn-outline-primary w-100" onclick="editProfile()">
@@ -152,49 +145,10 @@
           <div class="card-header">
             <h5 class="mb-0">Swap Requests</h5>
           </div>
-          <div class="card-body">
-            <div class="swap-request pending">
-              <div class="d-flex justify-content-between align-items-start">
-                <div>
-                  <h6 class="fw-bold">Sarah Johnson</h6>
-                  <p class="text-muted mb-2">Wants to learn: <strong>Photoshop</strong></p>
-                  <p class="text-muted mb-2">Can offer: <strong>Video Editing</strong></p>
-                  <small class="text-muted">Requested 2 hours ago</small>
-                </div>
-                <div class="d-flex gap-2">
-                  <button class="btn btn-success btn-sm" onclick="acceptSwap(1)">Accept</button>
-                  <button class="btn btn-danger btn-sm" onclick="rejectSwap(1)">Reject</button>
-                </div>
-              </div>
-            </div>
-            
-            <div class="swap-request accepted">
-              <div class="d-flex justify-content-between align-items-start">
-                <div>
-                  <h6 class="fw-bold">Mike Chen</h6>
-                  <p class="text-muted mb-2">Wants to learn: <strong>Excel</strong></p>
-                  <p class="text-muted mb-2">Can offer: <strong>Data Analysis</strong></p>
-                  <small class="text-success">Accepted 1 day ago</small>
-                </div>
-                <div>
-                  <button class="btn btn-primary btn-sm" onclick="viewSwapDetails(2)">View Details</button>
-                </div>
-              </div>
-            </div>
-            
-            <div class="swap-request">
-              <div class="d-flex justify-content-between align-items-start">
-                <div>
-                  <h6 class="fw-bold">Emma Wilson</h6>
-                  <p class="text-muted mb-2">Wants to learn: <strong>Spanish</strong></p>
-                  <p class="text-muted mb-2">Can offer: <strong>French</strong></p>
-                  <small class="text-muted">Requested 3 days ago</small>
-                </div>
-                <div class="d-flex gap-2">
-                  <button class="btn btn-success btn-sm" onclick="acceptSwap(3)">Accept</button>
-                  <button class="btn btn-danger btn-sm" onclick="rejectSwap(3)">Reject</button>
-                </div>
-              </div>
+          <div class="card-body" id="swapRequests">
+            <div class="text-center text-muted">
+              <i class="fas fa-inbox fa-2x mb-3"></i>
+              <p>No swap requests yet</p>
             </div>
           </div>
         </div>
@@ -204,35 +158,10 @@
           <div class="card-header">
             <h5 class="mb-0">Recent Activity</h5>
           </div>
-          <div class="card-body">
-            <div class="d-flex align-items-center mb-3">
-              <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                <i class="fas fa-star text-white"></i>
-              </div>
-              <div>
-                <p class="mb-1"><strong>New rating received</strong> from Sarah Johnson</p>
-                <small class="text-muted">5 stars - "Great Photoshop teacher!"</small>
-              </div>
-            </div>
-            
-            <div class="d-flex align-items-center mb-3">
-              <div class="bg-success rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                <i class="fas fa-check text-white"></i>
-              </div>
-              <div>
-                <p class="mb-1"><strong>Swap completed</strong> with Mike Chen</p>
-                <small class="text-muted">Excel for Data Analysis exchange</small>
-              </div>
-            </div>
-            
-            <div class="d-flex align-items-center mb-3">
-              <div class="bg-info rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                <i class="fas fa-plus text-white"></i>
-              </div>
-              <div>
-                <p class="mb-1"><strong>New skill added</strong> to your profile</p>
-                <small class="text-muted">Web Design skill added</small>
-              </div>
+          <div class="card-body" id="recentActivity">
+            <div class="text-center text-muted">
+              <i class="fas fa-clock fa-2x mb-3"></i>
+              <p>No recent activity</p>
             </div>
           </div>
         </div>
@@ -271,7 +200,7 @@
               <label for="skillDescription" class="form-label">Description (Optional)</label>
               <textarea class="form-control" id="skillDescription" rows="3" placeholder="Brief description of your skill level or what you want to learn"></textarea>
             </div>
-            
+
             <div class="mb-3">
               <label for="skillLevel" class="form-label">Skill Level</label>
               <select class="form-control" id="skillLevel">
@@ -292,112 +221,108 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://kit.fontawesome.com/your-fontawesome-kit.js"></script>
   <script src="js/api.js"></script>
   <script>
-    // Check authentication on page load
-    if (!api.isAuthenticated()) {
-      window.location.href = 'login.html';
-    }
-
-    // Global user data - will be loaded from backend
+    // Global user data
     let currentUser = null;
-    let userSkills = [];
-    let swapRequests = [];
-    let recentActivity = [];
+    let userSkills = { offered: [], wanted: [] };
 
     // Load user data when page loads
     document.addEventListener('DOMContentLoaded', function() {
       loadUserData();
       loadUserSkills();
       loadSwapRequests();
-      loadRecentActivity();
     });
 
-    // Load current user data from backend
-    async function loadUserData() {
+    // Load current user data
+    function loadUserData() {
       try {
-        // Replace with your actual API endpoint
-        const response = await fetch('/api/user/profile', {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        });
-        
-        if (response.ok) {
-          currentUser = await response.json();
+        // Get user data from localStorage
+        const userData = localStorage.getItem('currentUser');
+        if (userData) {
+          currentUser = JSON.parse(userData);
           updateUserInterface();
         } else {
-          // Fallback to demo data if API fails
-          currentUser = {
-            id: 1,
-            firstName: 'John',
-            lastName: 'Doe',
-            displayName: 'John Doe',
-            email: 'john@example.com',
-            location: 'Mumbai, India',
-            profilePhoto: 'https://via.placeholder.com/120x120/714b67/ffffff?text=JD',
-            bio: 'Passionate about learning and teaching',
-            rating: 4.8,
-            totalSwaps: 12,
-            isOnline: true,
-            isAvailable: true
-          };
-          updateUserInterface();
+          // Try to get from userData
+          const userDataAlt = localStorage.getItem('userData');
+          if (userDataAlt) {
+            const user = JSON.parse(userDataAlt);
+            currentUser = {
+              id: user.id,
+              displayName: user.display_name || user.displayName,
+              email: user.email,
+              role: user.role,
+              location: 'Location not set',
+              rating: 0.0,
+              totalSwaps: 0,
+              isOnline: true,
+              isAvailable: true
+            };
+            updateUserInterface();
+          } else {
+            // Fallback to demo data
+            currentUser = {
+              id: 2,
+              displayName: 'John Doe',
+              email: 'john@example.com',
+              role: 'user',
+              location: 'Mumbai, India',
+              rating: 4.8,
+              totalSwaps: 12,
+              isOnline: true,
+              isAvailable: true
+            };
+            updateUserInterface();
+          }
         }
       } catch (error) {
         console.error('Error loading user data:', error);
-        // Use demo data as fallback
         loadDemoData();
       }
     }
 
-    // Update UI with real user data
+    // Update UI with user data
     function updateUserInterface() {
       if (!currentUser) return;
 
       // Update navigation
-      const navName = document.querySelector('.nav-link.dropdown-toggle');
-      if (navName) {
-        navName.innerHTML = `
-          <img src="${currentUser.profilePhoto}" class="rounded-circle me-2" width="32" height="32">
-          ${currentUser.displayName}
-        `;
+      const userDisplayName = document.getElementById('userDisplayName');
+      if (userDisplayName) {
+        userDisplayName.textContent = currentUser.displayName;
       }
 
       // Update welcome message
-      const welcomeMessage = document.querySelector('h1.fw-bold');
-      if (welcomeMessage) {
-        welcomeMessage.textContent = `Welcome back, ${currentUser.firstName}! 👋`;
+      const welcomeName = document.getElementById('welcomeName');
+      if (welcomeName) {
+        welcomeName.textContent = currentUser.displayName.split(' ')[0]; // First name only
       }
 
       // Update profile section
-      const profileAvatar = document.querySelector('.profile-avatar');
-      const profileName = document.querySelector('.profile-section h4');
-      const profileLocation = document.querySelector('.profile-section p.text-muted');
-      const onlineStatus = document.querySelector('.badge.bg-success');
-      const availableStatus = document.querySelector('.badge.bg-secondary');
+      const profileName = document.getElementById('profileName');
+      const profileLocation = document.getElementById('profileLocation');
+      const profileAvatar = document.getElementById('profileAvatar');
+      const onlineStatus = document.getElementById('onlineStatus');
+      const availableStatus = document.getElementById('availableStatus');
+      const availability = document.getElementById('availability');
 
-      if (profileAvatar) profileAvatar.src = currentUser.profilePhoto;
       if (profileName) profileName.textContent = currentUser.displayName;
-      if (profileLocation) profileLocation.textContent = currentUser.location;
+      if (profileLocation) profileLocation.textContent = currentUser.location || 'Location not set';
+      if (profileAvatar) profileAvatar.src = `https://via.placeholder.com/120x120/714b67/ffffff?text=${currentUser.displayName.charAt(0)}`;
       if (onlineStatus) onlineStatus.style.display = currentUser.isOnline ? 'inline' : 'none';
       if (availableStatus) availableStatus.style.display = currentUser.isAvailable ? 'inline' : 'none';
+      if (availability) availability.textContent = currentUser.availability || 'Weekends, Evenings (6 PM - 10 PM)';
 
       // Update stats
       updateStats();
     }
 
-    // Load user skills from backend
+    // Load user skills
     async function loadUserSkills() {
       try {
-        const response = await fetch('/api/user/skills', {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        });
-        
-        if (response.ok) {
-          userSkills = await response.json();
+        const response = await api.getUserSkills();
+        if (response.success) {
+          userSkills = response.skills;
           renderUserSkills();
         }
       } catch (error) {
@@ -413,100 +338,60 @@
 
     // Render user skills in UI
     function renderUserSkills() {
-      const offeredContainer = document.querySelector('.profile-section .d-flex.flex-wrap.gap-2');
-      const wantedContainer = document.querySelector('.profile-section .d-flex.flex-wrap.gap-2:last-of-type');
+      const offeredContainer = document.getElementById('offeredSkills');
+      const wantedContainer = document.getElementById('wantedSkills');
 
-      if (offeredContainer && userSkills.offered) {
-        offeredContainer.innerHTML = userSkills.offered.map(skill => 
-          `<span class="skill-tag">${skill}</span>`
-        ).join('');
-      }
-
-      if (wantedContainer && userSkills.wanted) {
-        wantedContainer.innerHTML = userSkills.wanted.map(skill => 
-          `<span class="skill-tag wanted">${skill}</span>`
-        ).join('');
-      }
-    }
-
-    // Load swap requests from backend
-    async function loadSwapRequests() {
-      try {
-        const response = await fetch('/api/swaps/requests', {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        });
-        
-        if (response.ok) {
-          swapRequests = await response.json();
-          renderSwapRequests();
+      if (offeredContainer) {
+        if (userSkills.offered && userSkills.offered.length > 0) {
+          offeredContainer.innerHTML = userSkills.offered.map(skill => 
+            `<span class="skill-tag">${skill.name || skill}</span>`
+          ).join('');
+        } else {
+          offeredContainer.innerHTML = '<span class="text-muted">No skills added yet</span>';
         }
-      } catch (error) {
-        console.error('Error loading swap requests:', error);
-        // Use demo data as fallback
-        loadDemoSwapRequests();
       }
-    }
 
-    // Load recent activity from backend
-    async function loadRecentActivity() {
-      try {
-        const response = await fetch('/api/user/activity', {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        });
-        
-        if (response.ok) {
-          recentActivity = await response.json();
-          renderRecentActivity();
+      if (wantedContainer) {
+        if (userSkills.wanted && userSkills.wanted.length > 0) {
+          wantedContainer.innerHTML = userSkills.wanted.map(skill => 
+            `<span class="skill-tag wanted">${skill.name || skill}</span>`
+          ).join('');
+        } else {
+          wantedContainer.innerHTML = '<span class="text-muted">No skills wanted yet</span>';
         }
-      } catch (error) {
-        console.error('Error loading activity:', error);
-        // Use demo data as fallback
-        loadDemoActivity();
       }
+
+      // Update stats
+      updateStats();
     }
 
     // Update stats with real data
     function updateStats() {
-      if (!currentUser) return;
+      const skillsOffered = document.getElementById('skillsOffered');
+      const skillsWanted = document.getElementById('skillsWanted');
+      const totalSwaps = document.getElementById('totalSwaps');
+      const userRating = document.getElementById('userRating');
 
-      const statsElements = document.querySelectorAll('.stats-number');
-      if (statsElements.length >= 4) {
-        statsElements[0].textContent = userSkills.offered?.length || 0; // Skills Offered
-        statsElements[1].textContent = userSkills.wanted?.length || 0;  // Skills Wanted
-        statsElements[2].textContent = currentUser.totalSwaps || 0;     // Total Swaps
-        statsElements[3].textContent = currentUser.rating || 0;         // Rating
-      }
+      if (skillsOffered) skillsOffered.textContent = userSkills.offered?.length || 0;
+      if (skillsWanted) skillsWanted.textContent = userSkills.wanted?.length || 0;
+      if (totalSwaps) totalSwaps.textContent = currentUser?.totalSwaps || 0;
+      if (userRating) userRating.textContent = currentUser?.rating || '0.0';
     }
 
-    // Demo data fallback functions
+    // Demo data fallback
     function loadDemoData() {
       currentUser = {
-        id: 1,
-        firstName: 'Demo',
-        lastName: 'User',
+        id: 2,
         displayName: 'Demo User',
         email: 'demo@example.com',
+        role: 'user',
         location: 'Demo City, India',
-        profilePhoto: 'https://via.placeholder.com/120x120/714b67/ffffff?text=DU',
-        bio: 'This is demo data',
         rating: 4.5,
         totalSwaps: 8,
         isOnline: true,
         isAvailable: true
       };
       updateUserInterface();
-    }
-
-    function loadDemoSwapRequests() {
-      // Demo swap requests data
-    }
-
-    function loadDemoActivity() {
-      // Demo activity data
     }
 
     // Search functionality
@@ -516,61 +401,10 @@
       
       if (searchTerm.trim()) {
         showToast(`Searching for "${searchTerm}"...`, 'info');
-        // In real app, this would make an API call
         setTimeout(() => {
           window.location.href = `search-results.html?q=${encodeURIComponent(searchTerm)}&category=${category}`;
         }, 1000);
       }
-    }
-
-    // Swap request functions
-    async function acceptSwap(swapId) {
-      try {
-        const response = await fetch(`/api/swaps/${swapId}/accept`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        });
-        
-        if (response.ok) {
-          showToast('Swap request accepted!', 'success');
-          loadSwapRequests(); // Reload data
-        } else {
-          showToast('Failed to accept swap request', 'error');
-        }
-      } catch (error) {
-        console.error('Error accepting swap:', error);
-        showToast('Error accepting swap request', 'error');
-      }
-    }
-
-    async function rejectSwap(swapId) {
-      if (confirm('Are you sure you want to reject this swap request?')) {
-        try {
-          const response = await fetch(`/api/swaps/${swapId}/reject`, {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-          });
-          
-          if (response.ok) {
-            showToast('Swap request rejected', 'info');
-            loadSwapRequests(); // Reload data
-          } else {
-            showToast('Failed to reject swap request', 'error');
-          }
-        } catch (error) {
-          console.error('Error rejecting swap:', error);
-          showToast('Error rejecting swap request', 'error');
-        }
-      }
-    }
-
-    function viewSwapDetails(swapId) {
-      showToast('Opening swap details...', 'info');
-      // In real app, this would open a modal or navigate to details page
     }
 
     // Modal functions
@@ -589,21 +423,14 @@
       }
       
       try {
-        const response = await fetch('/api/user/skills', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          },
-          body: JSON.stringify({
-            name: skillName,
-            type: skillType,
-            level: document.getElementById('skillLevel').value,
-            description: document.getElementById('skillDescription').value
-          })
+        const response = await api.addSkill({
+          name: skillName,
+          type: skillType,
+          level: document.getElementById('skillLevel').value,
+          description: document.getElementById('skillDescription').value
         });
         
-        if (response.ok) {
+        if (response.success) {
           showToast(`Skill "${skillName}" added successfully!`, 'success');
           
           // Close modal
@@ -626,6 +453,10 @@
 
     function editProfile() {
       window.location.href = 'profile-setup.html';
+    }
+
+    function logout() {
+      api.logout();
     }
 
     function showToast(message, type = 'info') {
@@ -653,6 +484,189 @@
         searchUsers();
       }
     });
+
+    // Load swap requests
+    async function loadSwapRequests() {
+      try {
+        const response = await api.getSwapRequests();
+        if (response.success) {
+          renderSwapRequests(response.requests);
+        }
+      } catch (error) {
+        console.error('Error loading swap requests:', error);
+        // Use demo data as fallback
+        loadDemoSwapRequests();
+      }
+    }
+
+    // Render swap requests in UI
+    function renderSwapRequests(requests) {
+      const container = document.getElementById('swapRequests');
+      
+      if (!requests || requests.length === 0) {
+        container.innerHTML = `
+          <div class="text-center text-muted">
+            <i class="fas fa-inbox fa-2x mb-3"></i>
+            <p>No swap requests yet</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = requests.map(request => `
+        <div class="swap-request ${request.status} mb-3 p-3 border rounded" data-request-id="${request.id}">
+          <div class="d-flex justify-content-between align-items-start">
+            <div class="flex-grow-1">
+              <h6 class="fw-bold">${request.requester_name}</h6>
+              <p class="text-muted mb-2">Wants to learn: <strong>${request.requested_skill_name}</strong></p>
+              <p class="text-muted mb-2">Can offer: <strong>${request.offered_skill_name}</strong></p>
+              ${request.message ? `<p class="text-muted mb-2"><em>"${request.message}"</em></p>` : ''}
+              <small class="text-muted">Requested ${formatTimeAgo(request.created_at)}</small>
+            </div>
+            <div class="swap-buttons d-flex gap-2">
+              ${request.status === 'pending' ? `
+                <button class="btn btn-success btn-sm" onclick="acceptSwap(${request.id})">Accept</button>
+                <button class="btn btn-danger btn-sm" onclick="rejectSwap(${request.id})">Reject</button>
+              ` : request.status === 'accepted' ? `
+                <span class="badge bg-success">Accepted</span>
+                <button class="btn btn-primary btn-sm" onclick="viewSwapDetails(${request.id})">View Details</button>
+              ` : `
+                <span class="badge bg-secondary">Rejected</span>
+              `}
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Accept swap request (demo version)
+    async function acceptSwap(requestId) {
+      try {
+        // For demo, we'll just update the local state
+        const container = document.getElementById('swapRequests');
+        const requestElement = container.querySelector(`[data-request-id="${requestId}"]`);
+        
+        if (requestElement) {
+          // Update the status in the UI
+          const statusElement = requestElement.querySelector('.swap-status');
+          const buttonsElement = requestElement.querySelector('.swap-buttons');
+          
+          if (statusElement) statusElement.innerHTML = '<span class="badge bg-success">Accepted</span>';
+          if (buttonsElement) {
+            buttonsElement.innerHTML = `
+              <span class="badge bg-success">Accepted</span>
+              <button class="btn btn-primary btn-sm" onclick="viewSwapDetails(${requestId})">View Details</button>
+            `;
+          }
+          
+          showToast('Swap request accepted!', 'success');
+        } else {
+          // If not found in DOM, try API
+          const response = await api.acceptSwap(requestId);
+          if (response.success) {
+            showToast('Swap request accepted!', 'success');
+            loadSwapRequests(); // Reload requests
+          } else {
+            showToast('Failed to accept swap request', 'error');
+          }
+        }
+      } catch (error) {
+        console.error('Error accepting swap:', error);
+        showToast('Error accepting swap request', 'error');
+      }
+    }
+
+    // Reject swap request (demo version)
+    async function rejectSwap(requestId) {
+      if (confirm('Are you sure you want to reject this swap request?')) {
+        try {
+          // For demo, we'll just update the local state
+          const container = document.getElementById('swapRequests');
+          const requestElement = container.querySelector(`[data-request-id="${requestId}"]`);
+          
+          if (requestElement) {
+            // Update the status in the UI
+            const statusElement = requestElement.querySelector('.swap-status');
+            const buttonsElement = requestElement.querySelector('.swap-buttons');
+            
+            if (statusElement) statusElement.innerHTML = '<span class="badge bg-secondary">Rejected</span>';
+            if (buttonsElement) {
+              buttonsElement.innerHTML = '<span class="badge bg-secondary">Rejected</span>';
+            }
+            
+            showToast('Swap request rejected', 'info');
+          } else {
+            // If not found in DOM, try API
+            const response = await api.rejectSwap(requestId);
+            if (response.success) {
+              showToast('Swap request rejected', 'info');
+              loadSwapRequests(); // Reload requests
+            } else {
+              showToast('Failed to reject swap request', 'error');
+            }
+          }
+        } catch (error) {
+          console.error('Error rejecting swap:', error);
+          showToast('Error rejecting swap request', 'error');
+        }
+      }
+    }
+
+    // View swap details
+    function viewSwapDetails(requestId) {
+      showToast('Opening swap details...', 'info');
+      // In real app, this would open a modal or navigate to details page
+    }
+
+    // Demo swap requests fallback
+    function loadDemoSwapRequests() {
+      const demoRequests = [
+        {
+          id: 1,
+          requester_name: 'Sarah Johnson',
+          requested_skill_name: 'Photoshop',
+          offered_skill_name: 'Video Editing',
+          message: 'I would love to learn Photoshop for my design projects!',
+          status: 'pending',
+          created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString() // 2 hours ago
+        },
+        {
+          id: 2,
+          requester_name: 'Mike Chen',
+          requested_skill_name: 'Excel',
+          offered_skill_name: 'Data Analysis',
+          message: 'Need Excel skills for work, can teach data analysis in return.',
+          status: 'accepted',
+          created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString() // 1 day ago
+        },
+        {
+          id: 3,
+          requester_name: 'Emma Wilson',
+          requested_skill_name: 'Spanish',
+          offered_skill_name: 'French',
+          message: 'Planning a trip to Spain, would love to practice Spanish!',
+          status: 'pending',
+          created_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString() // 3 days ago
+        }
+      ];
+      renderSwapRequests(demoRequests);
+    }
+
+    // Format time ago
+    function formatTimeAgo(dateString) {
+      const date = new Date(dateString);
+      const now = new Date();
+      const diffInHours = Math.floor((now - date) / (1000 * 60 * 60));
+      
+      if (diffInHours < 1) {
+        return 'Just now';
+      } else if (diffInHours < 24) {
+        return `${diffInHours} hour${diffInHours > 1 ? 's' : ''} ago`;
+      } else {
+        const diffInDays = Math.floor(diffInHours / 24);
+        return `${diffInDays} day${diffInDays > 1 ? 's' : ''} ago`;
+      }
+    }
   </script>
 
   <!-- Footer -->

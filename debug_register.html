@@ -9,6 +9,7 @@
     .debug-info { background: #f8f9fa; padding: 15px; margin: 10px 0; border-radius: 5px; }
     .error { color: red; }
     .success { color: green; }
+    .warning { color: orange; }
   </style>
 </head>
 <body>
@@ -43,18 +44,39 @@
       <h4>Response:</h4>
       <div id="response" class="debug-info"></div>
     </div>
+
+    <div class="mt-4">
+      <h4>Console Logs:</h4>
+      <div id="consoleLogs" class="debug-info" style="max-height: 300px; overflow-y: auto;"></div>
+    </div>
   </div>
 
   <script>
     // Debug information
     const debugInfo = document.getElementById('debugInfo');
     const responseDiv = document.getElementById('response');
+    const consoleLogs = document.getElementById('consoleLogs');
+
+    // Override console.log to capture logs
+    const originalLog = console.log;
+    const originalError = console.error;
+    
+    console.log = function(...args) {
+      originalLog.apply(console, args);
+      consoleLogs.innerHTML += `<div class="text-primary">LOG: ${args.join(' ')}</div>`;
+    };
+    
+    console.error = function(...args) {
+      originalError.apply(console, args);
+      consoleLogs.innerHTML += `<div class="error">ERROR: ${args.join(' ')}</div>`;
+    };
 
     // Check if API file exists
     async function checkAPIFile() {
       try {
         const response = await fetch('backend/api/auth/register.php');
         debugInfo.innerHTML += `<div class="success">✅ API file accessible</div>`;
+        debugInfo.innerHTML += `<div>Status: ${response.status}</div>`;
       } catch (error) {
         debugInfo.innerHTML += `<div class="error">❌ API file not accessible: ${error.message}</div>`;
       }
@@ -71,6 +93,9 @@
       responseDiv.innerHTML = '<div>Testing registration...</div>';
 
       try {
+        console.log('Sending registration request...');
+        console.log('Data:', { displayName, email, password });
+
         const response = await fetch('backend/api/auth/register.php', {
           method: 'POST',
           headers: {
@@ -83,7 +108,24 @@
           })
         });
 
-        const data = await response.json();
+        console.log('Response status:', response.status);
+        console.log('Response headers:', response.headers);
+
+        const responseText = await response.text();
+        console.log('Response text:', responseText);
+
+        let data;
+        try {
+          data = JSON.parse(responseText);
+        } catch (parseError) {
+          console.error('Failed to parse JSON:', parseError);
+          responseDiv.innerHTML = `
+            <div class="error"><strong>Error:</strong> Invalid JSON response</div>
+            <div><strong>Raw Response:</strong></div>
+            <pre>${responseText}</pre>
+          `;
+          return;
+        }
         
         responseDiv.innerHTML = `
           <div><strong>Status:</strong> ${response.status}</div>
@@ -91,7 +133,14 @@
           <pre>${JSON.stringify(data, null, 2)}</pre>
         `;
 
+        if (data.success) {
+          responseDiv.innerHTML += `<div class="success">✅ Registration successful!</div>`;
+        } else {
+          responseDiv.innerHTML += `<div class="error">❌ Registration failed: ${data.error}</div>`;
+        }
+
       } catch (error) {
+        console.error('Fetch error:', error);
         responseDiv.innerHTML = `
           <div class="error"><strong>Error:</strong> ${error.message}</div>
         `;
@@ -101,7 +150,8 @@
     // Initialize debug info
     checkAPIFile();
     debugInfo.innerHTML += `<div>Current URL: ${window.location.href}</div>`;
-    debugInfo.innerHTML += `<div>API Base URL: http://localhost/skillswap/backend/api</div>`;
+    debugInfo.innerHTML += `<div>API Base URL: http://localhost/oddo/backend/api</div>`;
+    debugInfo.innerHTML += `<div>User Agent: ${navigator.userAgent}</div>`;
   </script>
 </body>
 </html> 

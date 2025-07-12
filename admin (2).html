@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel | Skill Swap</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container">
+      <a class="navbar-brand" href="#">SkillSwap Admin</a>
+      <div class="navbar-nav ms-auto">
+        <a class="nav-link" href="dashboard.html">Dashboard</a>
+        <a class="nav-link" href="login.html">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container py-5">
+    <!-- Admin Header -->
+    <div class="row mb-5">
+      <div class="col-lg-8">
+        <h1 class="fw-bold text-dark mb-3">Admin Dashboard</h1>
+        <p class="text-muted">Monitor and manage the Skill Swap platform</p>
+      </div>
+      <div class="col-lg-4 text-end">
+        <button class="btn btn-primary" onclick="sendAnnouncement()">
+          <i class="fas fa-bullhorn me-2"></i>Send Announcement
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats Overview -->
+    <div class="admin-stats mb-5">
+      <div class="stats-card">
+        <div class="stats-number">1,247</div>
+        <div class="text-muted">Total Users</div>
+      </div>
+      <div class="stats-card">
+        <div class="stats-number">89</div>
+        <div class="text-muted">Pending Swaps</div>
+      </div>
+      <div class="stats-card">
+        <div class="stats-number">156</div>
+        <div class="text-muted">Completed Swaps</div>
+      </div>
+      <div class="stats-card">
+        <div class="stats-number">23</div>
+        <div class="text-muted">Reported Issues</div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="row">
+      <!-- Left Column -->
+      <div class="col-lg-8">
+        <!-- Pending Approvals -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5 class="mb-0">Pending Approvals</h5>
+          </div>
+          <div class="card-body">
+            <div class="swap-request pending">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <h6 class="fw-bold">User: John Smith</h6>
+                  <p class="text-muted mb-2">Skill: "Advanced Hacking Techniques"</p>
+                  <p class="text-muted mb-2">Description: "Learn to hack into systems and networks"</p>
+                  <small class="text-muted">Submitted 2 hours ago</small>
+                </div>
+                <div class="d-flex gap-2">
+                  <button class="btn btn-success btn-sm" onclick="approveSkill(1)">Approve</button>
+                  <button class="btn btn-danger btn-sm" onclick="rejectSkill(1)">Reject</button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="swap-request pending">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <h6 class="fw-bold">User: Jane Doe</h6>
+                  <p class="text-muted mb-2">Skill: "Spam Marketing"</p>
+                  <p class="text-muted mb-2">Description: "Learn to send effective spam emails"</p>
+                  <small class="text-muted">Submitted 4 hours ago</small>
+                </div>
+                <div class="d-flex gap-2">
+                  <button class="btn btn-success btn-sm" onclick="approveSkill(2)">Approve</button>
+                  <button class="btn btn-danger btn-sm" onclick="rejectSkill(2)">Reject</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- User Reports -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5 class="mb-0">User Reports</h5>
+          </div>
+          <div class="card-body">
+            <div class="swap-request rejected">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <h6 class="fw-bold">Reported User: Alex Johnson</h6>
+                  <p class="text-muted mb-2">Reason: Inappropriate behavior during skill exchange</p>
+                  <p class="text-muted mb-2">Reported by: Sarah Wilson</p>
+                  <small class="text-muted">Reported 1 day ago</small>
+                </div>
+                <div class="d-flex gap-2">
+                  <button class="btn btn-warning btn-sm" onclick="warnUser('alex')">Warn User</button>
+                  <button class="btn btn-danger btn-sm" onclick="banUser('alex')">Ban User</button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="swap-request rejected">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <h6 class="fw-bold">Reported User: Mike Brown</h6>
+                  <p class="text-muted mb-2">Reason: Spam messages and fake skills</p>
+                  <p class="text-muted mb-2">Reported by: Multiple users</p>
+                  <small class="text-muted">Reported 2 days ago</small>
+                </div>
+                <div class="d-flex gap-2">
+                  <button class="btn btn-warning btn-sm" onclick="warnUser('mike')">Warn User</button>
+                  <button class="btn btn-danger btn-sm" onclick="banUser('mike')">Ban User</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">Recent Activity</h5>
+          </div>
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-3">
+              <div class="bg-success rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                <i class="fas fa-check text-white"></i>
+              </div>
+              <div>
+                <p class="mb-1"><strong>Skill approved</strong> - "Digital Marketing" by Lisa Chen</p>
+                <small class="text-muted">2 hours ago</small>
+              </div>
+            </div>
+            
+            <div class="d-flex align-items-center mb-3">
+              <div class="bg-danger rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                <i class="fas fa-ban text-white"></i>
+              </div>
+              <div>
+                <p class="mb-1"><strong>User banned</strong> - Tom Wilson for multiple violations</p>
+                <small class="text-muted">4 hours ago</small>
+              </div>
+            </div>
+            
+            <div class="d-flex align-items-center mb-3">
+              <div class="bg-info rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                <i class="fas fa-bullhorn text-white"></i>
+              </div>
+              <div>
+                <p class="mb-1"><strong>Announcement sent</strong> - "New feature: Video calls"</p>
+                <small class="text-muted">1 day ago</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column -->
+      <div class="col-lg-4">
+        <!-- Quick Actions -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5 class="mb-0">Quick Actions</h5>
+          </div>
+          <div class="card-body">
+            <button class="btn btn-outline-primary w-100 mb-2" onclick="downloadReport('users')">
+              <i class="fas fa-download me-2"></i>Download User Report
+            </button>
+            <button class="btn btn-outline-primary w-100 mb-2" onclick="downloadReport('swaps')">
+              <i class="fas fa-download me-2"></i>Download Swap Report
+            </button>
+            <button class="btn btn-outline-primary w-100 mb-2" onclick="downloadReport('feedback')">
+              <i class="fas fa-download me-2"></i>Download Feedback Report
+            </button>
+            <button class="btn btn-outline-warning w-100 mb-2" onclick="openAnnouncementModal()">
+              <i class="fas fa-bullhorn me-2"></i>Send Announcement
+            </button>
+            <button class="btn btn-outline-danger w-100" onclick="openMaintenanceModal()">
+              <i class="fas fa-tools me-2"></i>Maintenance Mode
+            </button>
+          </div>
+        </div>
+
+        <!-- Platform Stats -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5 class="mb-0">Platform Statistics</h5>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <h6 class="fw-bold">Active Users Today</h6>
+              <div class="progress mb-2">
+                <div class="progress-bar" style="width: 75%"></div>
+              </div>
+              <small class="text-muted">934 out of 1,247 users</small>
+            </div>
+            
+            <div class="mb-3">
+              <h6 class="fw-bold">Successful Swaps Rate</h6>
+              <div class="progress mb-2">
+                <div class="progress-bar bg-success" style="width: 88%"></div>
+              </div>
+              <small class="text-muted">88% success rate</small>
+            </div>
+            
+            <div class="mb-3">
+              <h6 class="fw-bold">User Satisfaction</h6>
+              <div class="progress mb-2">
+                <div class="progress-bar bg-warning" style="width: 92%"></div>
+              </div>
+              <small class="text-muted">4.6/5 average rating</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- System Status -->
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">System Status</h5>
+          </div>
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span>Database</span>
+              <span class="badge bg-success">Online</span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span>API Services</span>
+              <span class="badge bg-success">Online</span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span>Email Service</span>
+              <span class="badge bg-success">Online</span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+              <span>File Storage</span>
+              <span class="badge bg-warning">Slow</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Announcement Modal -->
+  <div class="modal fade" id="announcementModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Send Platform Announcement</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="announcementForm">
+            <div class="mb-3">
+              <label for="announcementTitle" class="form-label">Title</label>
+              <input type="text" class="form-control" id="announcementTitle" placeholder="Announcement title" required>
+            </div>
+            
+            <div class="mb-3">
+              <label for="announcementMessage" class="form-label">Message</label>
+              <textarea class="form-control" id="announcementMessage" rows="4" placeholder="Enter your announcement message..." required></textarea>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label">Type</label>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="announcementType" id="typeInfo" value="info" checked>
+                <label class="form-check-label" for="typeInfo">Information</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="announcementType" id="typeWarning" value="warning">
+                <label class="form-check-label" for="typeWarning">Warning</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="announcementType" id="typeMaintenance" value="maintenance">
+                <label class="form-check-label" for="typeMaintenance">Maintenance</label>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" onclick="sendAnnouncement()">Send Announcement</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Global admin data - will be loaded from backend
+    let adminStats = null;
+    let pendingApprovals = [];
+    let userReports = [];
+    let recentActivity = [];
+    let systemStatus = {};
+
+    // Check if user is admin
+    function checkAdminAccess() {
+      const token = localStorage.getItem('token');
+      const userRole = localStorage.getItem('userRole');
+      
+      if (!token || userRole !== 'admin') {
+        showToast('Access denied. Admin privileges required.', 'error');
+        setTimeout(() => {
+          window.location.href = 'login.html';
+        }, 2000);
+        return false;
+      }
+      return true;
+    }
+
+    // Load admin data when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      if (!checkAdminAccess()) return;
+      
+      loadAdminStats();
+      loadPendingApprovals();
+      loadUserReports();
+      loadRecentActivity();
+      loadSystemStatus();
+    });
+
+    // Load platform statistics
+    async function loadAdminStats() {
+      try {
+        const response = await fetch('/api/admin/stats', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        
+        if (response.ok) {
+          adminStats = await response.json();
+          updateStatsDisplay();
+        } else {
+          showToast('Failed to load platform stats', 'error');
+          loadDemoStats();
+        }
+      } catch (error) {
+        console.error('Error loading admin stats:', error);
+        loadDemoStats();
+      }
+    }
+
+    // Update stats display
+    function updateStatsDisplay() {
+      if (!adminStats) return;
+
+      const statsElements = document.querySelectorAll('.stats-number');
+      if (statsElements.length >= 4) {
+        statsElements[0].textContent = adminStats.totalUsers?.toLocaleString() || '0';
+        statsElements[1].textContent = adminStats.pendingSwaps || '0';
+        statsElements[2].textContent = adminStats.completedSwaps || '0';
+        statsElements[3].textContent = adminStats.reportedIssues || '0';
+      }
+
+      // Update progress bars
+      const activeUsersProgress = document.querySelector('.progress-bar');
+      const successRateProgress = document.querySelector('.progress-bar.bg-success');
+      const satisfactionProgress = document.querySelector('.progress-bar.bg-warning');
+
+      if (activeUsersProgress && adminStats.activeUsersToday && adminStats.totalUsers) {
+        const percentage = (adminStats.activeUsersToday / adminStats.totalUsers) * 100;
+        activeUsersProgress.style.width = `${percentage}%`;
+        activeUsersProgress.nextElementSibling.textContent = 
+          `${adminStats.activeUsersToday} out of ${adminStats.totalUsers} users`;
+      }
+
+      if (successRateProgress && adminStats.successRate) {
+        successRateProgress.style.width = `${adminStats.successRate}%`;
+        successRateProgress.nextElementSibling.textContent = `${adminStats.successRate}% success rate`;
+      }
+
+      if (satisfactionProgress && adminStats.averageRating) {
+        const percentage = (adminStats.averageRating / 5) * 100;
+        satisfactionProgress.style.width = `${percentage}%`;
+        satisfactionProgress.nextElementSibling.textContent = `${adminStats.averageRating}/5 average rating`;
+      }
+    }
+
+    // Load pending skill approvals
+    async function loadPendingApprovals() {
+      try {
+        const response = await fetch('/api/admin/approvals', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        
+        if (response.ok) {
+          pendingApprovals = await response.json();
+          renderPendingApprovals();
+        } else {
+          showToast('Failed to load pending approvals', 'error');
+          loadDemoApprovals();
+        }
+      } catch (error) {
+        console.error('Error loading approvals:', error);
+        loadDemoApprovals();
+      }
+    }
+
+    // Render pending approvals
+    function renderPendingApprovals() {
+      const container = document.querySelector('.card-body');
+      if (!container) return;
+
+      // Find the approvals section
+      const approvalsSection = container.querySelector('.swap-request.pending');
+      if (!approvalsSection) return;
+
+      const approvalsContainer = approvalsSection.parentElement;
+      approvalsContainer.innerHTML = '';
+
+      if (pendingApprovals.length === 0) {
+        approvalsContainer.innerHTML = `
+          <div class="text-center text-muted py-4">
+            <i class="fas fa-check-circle fa-2x mb-3"></i>
+            <p>No pending approvals</p>
+          </div>
+        `;
+        return;
+      }
+
+      pendingApprovals.forEach(approval => {
+        const approvalElement = document.createElement('div');
+        approvalElement.className = 'swap-request pending';
+        approvalElement.innerHTML = `
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <h6 class="fw-bold">User: ${approval.userName}</h6>
+              <p class="text-muted mb-2">Skill: "${approval.skillName}"</p>
+              <p class="text-muted mb-2">Description: ${approval.description}</p>
+              <small class="text-muted">Submitted ${formatTimeAgo(approval.submittedAt)}</small>
+            </div>
+            <div class="d-flex gap-2">
+              <button class="btn btn-success btn-sm" onclick="approveSkill(${approval.id})">Approve</button>
+              <button class="btn btn-danger btn-sm" onclick="rejectSkill(${approval.id})">Reject</button>
+            </div>
+          </div>
+        `;
+        approvalsContainer.appendChild(approvalElement);
+      });
+    }
+
+    // Load user reports
+    async function loadUserReports() {
+      try {
+        const response = await fetch('/api/admin/reports', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        
+        if (response.ok) {
+          userReports = await response.json();
+          renderUserReports();
+        } else {
+          showToast('Failed to load user reports', 'error');
+          loadDemoReports();
+        }
+      } catch (error) {
+        console.error('Error loading reports:', error);
+        loadDemoReports();
+      }
+    }
+
+    // Render user reports
+    function renderUserReports() {
+      const reportsContainer = document.querySelector('.card:nth-child(2) .card-body');
+      if (!reportsContainer) return;
+
+      const reportsSection = reportsContainer.querySelector('.swap-request.rejected');
+      if (!reportsSection) return;
+
+      const container = reportsSection.parentElement;
+      container.innerHTML = '';
+
+      if (userReports.length === 0) {
+        container.innerHTML = `
+          <div class="text-center text-muted py-4">
+            <i class="fas fa-shield-alt fa-2x mb-3"></i>
+            <p>No user reports</p>
+          </div>
+        `;
+        return;
+      }
+
+      userReports.forEach(report => {
+        const reportElement = document.createElement('div');
+        reportElement.className = 'swap-request rejected';
+        reportElement.innerHTML = `
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <h6 class="fw-bold">Reported User: ${report.reportedUserName}</h6>
+              <p class="text-muted mb-2">Reason: ${report.reason}</p>
+              <p class="text-muted mb-2">Reported by: ${report.reportedBy}</p>
+              <small class="text-muted">Reported ${formatTimeAgo(report.reportedAt)}</small>
+            </div>
+            <div class="d-flex gap-2">
+              <button class="btn btn-warning btn-sm" onclick="warnUser('${report.reportedUserId}')">Warn User</button>
+              <button class="btn btn-danger btn-sm" onclick="banUser('${report.reportedUserId}')">Ban User</button>
+            </div>
+          </div>
+        `;
+        container.appendChild(reportElement);
+      });
+    }
+
+    // Load recent activity
+    async function loadRecentActivity() {
+      try {
+        const response = await fetch('/api/admin/activity', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        
+        if (response.ok) {
+          recentActivity = await response.json();
+          renderRecentActivity();
+        } else {
+          showToast('Failed to load recent activity', 'error');
+          loadDemoActivity();
+        }
+      } catch (error) {
+        console.error('Error loading activity:', error);
+        loadDemoActivity();
+      }
+    }
+
+    // Render recent activity
+    function renderRecentActivity() {
+      const activityContainer = document.querySelector('.card:last-child .card-body');
+      if (!activityContainer) return;
+
+      activityContainer.innerHTML = '';
+
+      if (recentActivity.length === 0) {
+        activityContainer.innerHTML = `
+          <div class="text-center text-muted py-4">
+            <i class="fas fa-clock fa-2x mb-3"></i>
+            <p>No recent activity</p>
+          </div>
+        `;
+        return;
+      }
+
+      recentActivity.forEach(activity => {
+        const activityElement = document.createElement('div');
+        activityElement.className = 'd-flex align-items-center mb-3';
+        
+        const iconClass = getActivityIcon(activity.type);
+        const bgClass = getActivityBgClass(activity.type);
+        
+        activityElement.innerHTML = `
+          <div class="${bgClass} rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+            <i class="${iconClass} text-white"></i>
+          </div>
+          <div>
+            <p class="mb-1"><strong>${activity.title}</strong> ${activity.description}</p>
+            <small class="text-muted">${formatTimeAgo(activity.createdAt)}</small>
+          </div>
+        `;
+        activityContainer.appendChild(activityElement);
+      });
+    }
+
+    // Load system status
+    async function loadSystemStatus() {
+      try {
+        const response = await fetch('/api/admin/system-status', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        
+        if (response.ok) {
+          systemStatus = await response.json();
+          updateSystemStatus();
+        } else {
+          loadDemoSystemStatus();
+        }
+      } catch (error) {
+        console.error('Error loading system status:', error);
+        loadDemoSystemStatus();
+      }
+    }
+
+    // Update system status display
+    function updateSystemStatus() {
+      const statusContainer = document.querySelector('.card:last-child .card-body');
+      if (!statusContainer) return;
+
+      const statusItems = statusContainer.querySelectorAll('.d-flex.justify-content-between');
+      
+      statusItems.forEach((item, index) => {
+        const serviceName = item.querySelector('span:first-child').textContent.toLowerCase();
+        const statusBadge = item.querySelector('.badge');
+        
+        if (systemStatus[serviceName]) {
+          const status = systemStatus[serviceName];
+          statusBadge.className = `badge ${status === 'online' ? 'bg-success' : status === 'slow' ? 'bg-warning' : 'bg-danger'}`;
+          statusBadge.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+        }
+      });
+    }
+
+    // Helper functions
+    function getActivityIcon(type) {
+      const icons = {
+        'skill_approved': 'fas fa-check',
+        'user_banned': 'fas fa-ban',
+        'announcement_sent': 'fas fa-bullhorn',
+        'swap_completed': 'fas fa-exchange-alt',
+        'user_registered': 'fas fa-user-plus'
+      };
+      return icons[type] || 'fas fa-info-circle';
+    }
+
+    function getActivityBgClass(type) {
+      const bgClasses = {
+        'skill_approved': 'bg-success',
+        'user_banned': 'bg-danger',
+        'announcement_sent': 'bg-info',
+        'swap_completed': 'bg-primary',
+        'user_registered': 'bg-secondary'
+      };
+      return bgClasses[type] || 'bg-info';
+    }
+
+    function formatTimeAgo(timestamp) {
+      const now = new Date();
+      const time = new Date(timestamp);
+      const diffInHours = Math.floor((now - time) / (1000 * 60 * 60));
+      
+      if (diffInHours < 1) return 'Just now';
+      if (diffInHours < 24) return `${diffInHours} hours ago`;
+      
+      const diffInDays = Math.floor(diffInHours / 24);
+      return `${diffInDays} days ago`;
+    }
+
+    // Demo data fallback functions
+    function loadDemoStats() {
+      adminStats = {
+        totalUsers: 1247,
+        pendingSwaps: 89,
+        completedSwaps: 156,
+        reportedIssues: 23,
+        activeUsersToday: 934,
+        successRate: 88,
+        averageRating: 4.6
+      };
+      updateStatsDisplay();
+    }
+
+    function loadDemoApprovals() {
+      pendingApprovals = [
+        {
+          id: 1,
+          userId: 789,
+          userName: 'John Smith',
+          skillName: 'Advanced Hacking Techniques',
+          description: 'Learn to hack into systems and networks',
+          submittedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
+        }
+      ];
+      renderPendingApprovals();
+    }
+
+    function loadDemoReports() {
+      userReports = [
+        {
+          reportedUserId: 'alex',
+          reportedUserName: 'Alex Johnson',
+          reason: 'Inappropriate behavior during skill exchange',
+          reportedBy: 'Sarah Wilson',
+          reportedAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+        }
+      ];
+      renderUserReports();
+    }
+
+    function loadDemoActivity() {
+      recentActivity = [
+        {
+          id: 1,
+          type: 'skill_approved',
+          title: 'Skill approved',
+          description: '- "Digital Marketing" by Lisa Chen',
+          createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
+        }
+      ];
+      renderRecentActivity();
+    }
+
+    function loadDemoSystemStatus() {
+      systemStatus = {
+        database: 'online',
+        api: 'online',
+        email: 'online',
+        storage: 'slow'
+      };
+      updateSystemStatus();
+    }
+
+    // Admin action functions
+    async function approveSkill(skillId) {
+      if (confirm('Are you sure you want to approve this skill?')) {
+        try {
+          const response = await fetch(`/api/admin/approvals/${skillId}/approve`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+          });
+          
+          if (response.ok) {
+            showToast('Skill approved successfully!', 'success');
+            loadPendingApprovals();
+            loadAdminStats();
+          } else {
+            showToast('Failed to approve skill', 'error');
+          }
+        } catch (error) {
+          console.error('Error approving skill:', error);
+          showToast('Error approving skill', 'error');
+        }
+      }
+    }
+
+    async function rejectSkill(skillId) {
+      if (confirm('Are you sure you want to reject this skill?')) {
+        try {
+          const response = await fetch(`/api/admin/approvals/${skillId}/reject`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+          });
+          
+          if (response.ok) {
+            showToast('Skill rejected', 'info');
+            loadPendingApprovals();
+          } else {
+            showToast('Failed to reject skill', 'error');
+          }
+        } catch (error) {
+          console.error('Error rejecting skill:', error);
+          showToast('Error rejecting skill', 'error');
+        }
+      }
+    }
+
+    async function warnUser(userId) {
+      if (confirm('Send warning to this user?')) {
+        try {
+          const response = await fetch(`/api/admin/users/${userId}/warn`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+          });
+          
+          if (response.ok) {
+            showToast('Warning sent to user', 'warning');
+            loadUserReports();
+          } else {
+            showToast('Failed to send warning', 'error');
+          }
+        } catch (error) {
+          console.error('Error warning user:', error);
+          showToast('Error warning user', 'error');
+        }
+      }
+    }
+
+    async function banUser(userId) {
+      if (confirm('Are you sure you want to ban this user? This action cannot be undone.')) {
+        try {
+          const response = await fetch(`/api/admin/users/${userId}/ban`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+          });
+          
+          if (response.ok) {
+            showToast('User banned successfully', 'success');
+            loadUserReports();
+            loadAdminStats();
+          } else {
+            showToast('Failed to ban user', 'error');
+          }
+        } catch (error) {
+          console.error('Error banning user:', error);
+          showToast('Error banning user', 'error');
+        }
+      }
+    }
+
+    async function downloadReport(type) {
+      try {
+        const response = await fetch(`/api/admin/reports/${type}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        
+        if (response.ok) {
+          const blob = await response.blob();
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `${type}_report_${new Date().toISOString().split('T')[0]}.csv`;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          document.body.removeChild(a);
+          
+          showToast(`${type} report downloaded successfully!`, 'success');
+        } else {
+          showToast(`Failed to download ${type} report`, 'error');
+        }
+      } catch (error) {
+        console.error('Error downloading report:', error);
+        showToast(`Error downloading ${type} report`, 'error');
+      }
+    }
+
+    function openAnnouncementModal() {
+      const modal = new bootstrap.Modal(document.getElementById('announcementModal'));
+      modal.show();
+    }
+
+    async function sendAnnouncement() {
+      const title = document.getElementById('announcementTitle').value;
+      const message = document.getElementById('announcementMessage').value;
+      const type = document.querySelector('input[name="announcementType"]:checked').value;
+
+      if (!title || !message) {
+        showToast('Please fill in all fields', 'error');
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/admin/announcements', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify({
+            title,
+            message,
+            type
+          })
+        });
+        
+        if (response.ok) {
+          showToast('Announcement sent to all users!', 'success');
+
+          // Close modal
+          const modal = bootstrap.Modal.getInstance(document.getElementById('announcementModal'));
+          modal.hide();
+
+          // Reset form
+          document.getElementById('announcementForm').reset();
+          
+          // Reload activity
+          loadRecentActivity();
+        } else {
+          showToast('Failed to send announcement', 'error');
+        }
+      } catch (error) {
+        console.error('Error sending announcement:', error);
+        showToast('Error sending announcement', 'error');
+      }
+    }
+
+    async function openMaintenanceModal() {
+      if (confirm('Enable maintenance mode? This will temporarily disable the platform for all users.')) {
+        try {
+          const response = await fetch('/api/admin/maintenance', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({
+              enabled: true
+            })
+          });
+          
+          if (response.ok) {
+            showToast('Maintenance mode enabled', 'warning');
+          } else {
+            showToast('Failed to enable maintenance mode', 'error');
+          }
+        } catch (error) {
+          console.error('Error enabling maintenance mode:', error);
+          showToast('Error enabling maintenance mode', 'error');
+        }
+      }
+    }
+
+    function showToast(message, type = 'info') {
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.innerHTML = `
+        <div class="d-flex align-items-center">
+          <div class="me-3">
+            <i class="fas fa-${type === 'error' ? 'exclamation-circle text-danger' : type === 'success' ? 'check-circle text-success' : type === 'warning' ? 'exclamation-triangle text-warning' : 'info-circle text-primary'}"></i>
+          </div>
+          <div>${message}</div>
+        </div>
+      `;
+      
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.remove();
+      }, 4000);
+    }
+  </script>
+
+  <!-- Footer -->
+  <footer class="py-5 mt-5" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); color: var(--text-dark);">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4 mb-4">
+          <h5 class="fw-bold mb-3" style="color: var(--primary-color);">SkillSwap Admin</h5>
+          <p class="text-muted">Administrative panel for managing the Skill Swap platform. Monitor users, content, and platform performance.</p>
+        </div>
+        <div class="col-lg-2 mb-4">
+          <h6 class="fw-bold mb-3" style="color: var(--primary-color);">Platform</h6>
+          <ul class="list-unstyled">
+            <li><a href="index.html#features" class="text-muted text-decoration-none">Features</a></li>
+            <li><a href="index.html#how-it-works" class="text-muted text-decoration-none">How it Works</a></li>
+            <li><a href="#" class="text-muted text-decoration-none">Safety</a></li>
+            <li><a href="mailto:nishthakohli444@gmail.com" class="text-muted text-decoration-none">Support</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-2 mb-4">
+          <h6 class="fw-bold mb-3" style="color: var(--primary-color);">Community</h6>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-muted text-decoration-none">Guidelines</a></li>
+            <li><a href="#" class="text-muted text-decoration-none">Success Stories</a></li>
+            <li><a href="#" class="text-muted text-decoration-none">Blog</a></li>
+            <li><a href="#" class="text-muted text-decoration-none">Events</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-2 mb-4">
+          <h6 class="fw-bold mb-3" style="color: var(--primary-color);">Company</h6>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-muted text-decoration-none">About Us</a></li>
+            <li><a href="#" class="text-muted text-decoration-none">Careers</a></li>
+            <li><a href="#" class="text-muted text-decoration-none">Press</a></li>
+            <li><a href="mailto:nishthakohli444@gmail.com" class="text-muted text-decoration-none">Contact</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-2 mb-4">
+          <h6 class="fw-bold mb-3" style="color: var(--primary-color);">Support</h6>
+          <ul class="list-unstyled">
+            <li><a href="mailto:nishthakohli444@gmail.com" class="text-muted text-decoration-none">Email Support</a></li>
+            <li><a href="#" class="text-muted text-decoration-none">Help Center</a></li>
+            <li><a href="#" class="text-muted text-decoration-none">FAQ</a></li>
+            <li><a href="#" class="text-muted text-decoration-none">Report Issue</a></li>
+          </ul>
+        </div>
+      </div>
+      <hr class="my-4" style="border-color: var(--border-color);">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <p class="text-muted mb-0">&copy; 2024 SkillSwap. All rights reserved.</p>
+        </div>
+        <div class="col-md-6 text-end">
+          <div class="d-flex gap-3 justify-content-end">
+            <a href="#" class="text-muted"><i class="fab fa-facebook"></i></a>
+            <a href="#" class="text-muted"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="text-muted"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="text-muted"><i class="fab fa-linkedin"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html> 
